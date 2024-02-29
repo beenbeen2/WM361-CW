@@ -8,7 +8,7 @@
 class Diagnostics {
 public:
     enum class Flag { print, save, submit };
-    std::unordered_map<std::string, Flag> diagnostic_flag_map = {
+    std::unordered_map<std::string, Flag> diagnostics_flag_map = {
         {"--print", Flag::print},
         {"--save", Flag::save},
         {"--submit", Flag::submit},
@@ -27,7 +27,6 @@ public:
         std::cout << "floorbot battery health is " << floorbot.get_battery_health() << "%" << std::endl;
         std::cout << "floorbot filter health is " << floorbot.get_filter_health() << "%" << std::endl;
         std::cout << "floorbot power usage is " << floorbot.get_power_usage() << "W" << std::endl;
-
         return 0;
     }
 
@@ -35,7 +34,6 @@ public:
         std::cout 
             << "Diagnostic report for " << floorbot.get_name() 
             << " has successfully been saved to" << filename << ".txt" << std::endl;
-
         return 0;
     }
 
@@ -43,7 +41,6 @@ public:
         std::cout 
             << "Diagnostic report for " << floorbot.get_name() 
             << " has successfully been submitted to Floorbot customer support." << std::endl;
-        
         return 0;
     }
 };

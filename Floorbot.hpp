@@ -6,6 +6,7 @@
 #include <thread>
 #include <string>
 #include <vector>
+#include "Plugin.hpp"
 
 class Floorbot {
 private:
@@ -31,8 +32,9 @@ private:
     int filter_health;
     int power_usage;
 
+
 public:
-    enum class MoveFlag { forward, back, right, left };
+    std::vector<Plugin> installed_plugins {};
 
     Floorbot() = default;
 
@@ -77,30 +79,27 @@ public:
     int get_battery_health() const { return battery_health; }
     int get_filter_health() const { return filter_health; }
     int get_power_usage() const { return power_usage; }
+    
+    int move_forward(int distance) {
+        y_coord += distance;
+        return 0;
+    }
+    int move_back(int distance) {
+        y_coord -= distance;
+        return 0;
+    }
+    int move_right(int distance) {
+        x_coord += distance;
+        return 0;
+    }
+    int move_left(int distance) {
+        x_coord -= distance;
+        return 0;
+    }
 
     int power_off() { return 0; }
     int restart() { return 0; }
     int factory_reset() { return 0; }
-    
-    int move(MoveFlag direction, int distance) {
-        switch(direction) {
-            case MoveFlag::forward:
-                y_coord += distance;
-                break;
-            case MoveFlag::back:
-                y_coord -= distance;
-                break;
-            case MoveFlag::left:
-                x_coord += distance;
-                break;
-            case MoveFlag::right:
-                x_coord -= distance;
-                break;
-        }
-        std::cout << "Floorbot has moved " << distance << "cm to (" 
-            << x_coord << ", " << y_coord << ")." << std::endl;
-        return 0;
-    }
 };
 
 #endif

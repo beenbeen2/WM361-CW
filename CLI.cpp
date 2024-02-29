@@ -13,11 +13,12 @@
 #include "Diagnostics.hpp"
 #include "Control.hpp"
 #include "Scripts.hpp"
-#include "Plugins.hpp"
+#include "CommandHandler.hpp"
 
 class CLI {
 public:
     DummyObjects dummy_objects;
+    CommandHandler command_handler;
     bool user_logged_in = false;
     Account current_user;
     bool floorbot_selected = false;
@@ -31,14 +32,6 @@ public:
     std::unordered_map<std::string, Account> account_map = {
         {"BASIC", dummy_objects.basic_account},
         {"ADMIN", dummy_objects.admin_account},
-    };
-    enum class Command { move, diagnostics, plugins, scripts, robot };
-    std::unordered_map<std::string, Command> command_map = {
-        {"move", Command::move},
-        {"diagnostics", Command::diagnostics},
-        {"plugins", Command::plugins},
-        {"scripts", Command::scripts},
-        {"robot", Command::robot},
     };
 
     std::vector<std::string> split_string(std::string input) {
@@ -98,7 +91,7 @@ public:
             std::cout << std::endl << "Please select a floorbot linked to your account to begin controlling:" << std::endl;
             int i = 1;
             for (Floorbot linked_floorbot : current_user.linked_floorbots) {
-                std::cout << "[" << std::to_string(i) << "] " << linked_floorbot.name << std::endl;
+                std::cout << "[" << std::to_string(i) << "] " << linked_floorbot.get_name() << std::endl;
                 i++;
             }
             std::cin >> selected_floorbot_number;
@@ -109,55 +102,44 @@ public:
                 floorbot_selected = true;
             }
         }
-        std::cout << std::endl << "You have selected " << current_floorbot.name << "to control." << std::endl;
+        std::cout << std::endl << "You have selected " << current_floorbot.get_name() << "to control." << std::endl;
         return 0;
     };
 
     int input_command(std::string input) {
+        std::string command_input;
+        std::string flag_input;
+        std::string arg_input;
+
+        std::cout << "Please enter a command or type '--help' to see a list of available commands." << std::endl;
+        std::cin >> input;
+
         std::vector<std::string> input_list = split_string(input);
 
-        if (input_list.empty()) {
+        if (input_list.size() == 0) {
             std::cout << "Error: please enter a command.";
             return 1;
         };
-        std::string command_input = input_list[0];
-        
-        if (!command_map.count(command_input)) {
-            std::cout << "Error: invalid command entered.";
+        if (input_list.size() > 0) { command_input = input_list[0]; };
+        if (input_list.size() > 1) { flag_input = input_list[1]; };
+        if (input_list.size() > 2) { arg_input = input_list[2]; };
+        if (input_list.size() >= 4) {
+            std::cout << "Error: too many parameters enter, at most a command, flag, and argument should be entered.";
             return 1;
-        }
-        Command command = command_map[command_input];
+        };
 
-        switch(command) {
-            case Command::move: 
-                std::cout << "moving!";
-                current_floorbot.move()
-                // move();
-                break;
-            case Command::diagnostics:
-                std::cout << "diagnosing!";
-                // diagnostics();
-                break;
-            case Command::plugins:
-                std::cout << "plugining!";
-                // plugins();
-                break;
-            case Command::scripts:
-                std::cout << "scripting!";
-                // scripts();
-                break;
-            case Command::robot:
-                std::cout << "roboting!";
-                // robot();
-                break;
-        }
+        command_handler.parse_command(
+            command_input,
+            flag_input,
+            arg_input,
+            current_floorbot
+        );
 
         return 0;
     }
 };
 
 int main() {  
-    DummyObjects dummy_objects;
     CLI cli;
     
     std::cout << std::endl << "Welcome to the Floorbot CLI!" << std::endl;

@@ -3,9 +3,26 @@
 
 #include "Floorbot.hpp"
 #include "Account.hpp"
+#include "Script.hpp"
+#include "Plugin.hpp"
 
 class DummyObjects {
 public:
+// Dummy Scripts
+    Script shop_demo_script = Script(
+        "shop demo 1",
+        {"move --forward 5", "move --right 5", "move --back 5", "move --left 5"}
+    );
+
+    Script sanke_script = Script(
+        "snaking",
+        {"move --forward 5", "move --right 5", "move --forward 5", "move left 5", "move --forward 5"}
+    );
+
+// Dummy plugins
+    Plugin eco_mode_plugin = Plugin("Eco Mode", true);
+    Plugin filter_warning_plugin = Plugin("Filter Warning", true);
+
 // Dummy non-technical floorbots and users
     Floorbot basic_fb1 = Floorbot(
         "Floorbot Mini Shop Demo 1",
