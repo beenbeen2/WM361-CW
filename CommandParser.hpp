@@ -10,9 +10,6 @@
 class CommandParser {
 public:    
     enum class Command { move, diagnostics, plugins, scripts, robot };
-    // enum class ScriptFlag { list_installed, list_available, install, uninstall };
-    // enum class ScriptFlag { list_installed, list_available, install, uninstall, enable, disable };
-
     std::unordered_map<std::string, Command> command_map = {
         {"move", Command::move},
         {"diagnostics", Command::diagnostics},
@@ -75,18 +72,6 @@ public:
 
         return 0;
     }
-};
-
-int main () {
-    CommandParser parser;
-    std::string input;
-
-    std::cout << "Enter a command:\n";
-    getline(std::cin, input);
-    // std::cout << input;
-    parser.parse_input(input);
-
-    return 0;
 };
 
 #endif

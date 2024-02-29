@@ -21,8 +21,8 @@ public:
 
 };
 
-int main() {
-    std::cout << "\n\n\n\nStarting!\n\n";
+// int main() {
+//     std::cout << "\n\n\n\nStarting!\n\n";
 
     // std::cout << "Robot name is '" << Robot.name << "'\n";
     // std::cout << "Robot model is '" << Robot.model << "'\n";
@@ -39,7 +39,7 @@ int main() {
     // std::cout << "Robot has been running for " << runtime.count() << "ns";
 
     // std::cout << "\n\nDone! \n\n\n";
-    return 1;
-};
+//     return 1;
+// };
 
 #endif

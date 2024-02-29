@@ -7,6 +7,8 @@
 
 class Account {
 public:
+    Account() = default;
+    
     Account(
         std::string username,
         bool is_admin,
