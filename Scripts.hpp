@@ -1,6 +1,6 @@
-#include "Script.hpp"
-#include "DummyObjects.hpp"
-
+#ifndef SCRIPTS
+#define SCRIPTS
+  
 class Scripts {
 public:
     DummyObjects dummy_objects;
@@ -45,3 +45,5 @@ public:
         return 0;
     }
 };
+
+#endif

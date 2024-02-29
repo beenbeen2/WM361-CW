@@ -1,9 +1,8 @@
 #ifndef MOVE
 #define MOVE
 
-#include <iostream>
-#include <string>
 #include <unordered_map>
+#include <iostream>
 
 class Move {
 public:

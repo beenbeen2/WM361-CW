@@ -1,3 +1,6 @@
+#ifndef PLUGINS
+#define PLUGINS
+
 class Plugins {
 public:
     enum class Flag { list, install, uninstall, enable, disable };
@@ -10,7 +13,7 @@ public:
     };
 
     int parse_command(Floorbot floorbot, std::string flag_input, std::string arg_input = "") {
-
+        return 0;
     };
 
     int list(std::string filter) {
@@ -41,3 +44,5 @@ public:
         return 0;
     }
 };
+
+#endif

@@ -1,4 +1,5 @@
-
+#ifndef CONTROL
+#define CONTROL
 
 class Control {
 public:
@@ -10,6 +11,8 @@ public:
     };
 
     int parse_command(Floorbot floorbot, std::string flag_input, std::string arg_input = "") {
-
+        return 0;
     };
 };
+
+#endif

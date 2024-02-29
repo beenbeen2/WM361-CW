@@ -1,11 +1,10 @@
-#include <iostream>
-#include <chrono>
-#include <thread>
-#include <string>
-#include <vector>
 #include <sstream>
-#include <unordered_map>
+#include <sstream>
 
+#include "Plugin.hpp"
+#include "Script.hpp"
+#include "Floorbot.hpp"
+#include "Account.hpp"
 #include "DummyObjects.hpp"
 #include "Move.hpp"
 #include "Diagnostics.hpp"
@@ -111,21 +110,23 @@ public:
             if (selected_floorbot_number < 1 || selected_floorbot_number > current_user.linked_floorbots.size()) {
                 std::cout << "Error: incorrect number selected, please enter a number between 1-3.\n\n";
             } else {
-                current_floorbot = current_user.linked_floorbots[selected_floorbot_number];
+                current_floorbot = current_user.linked_floorbots[selected_floorbot_number-1];
                 floorbot_selected = true;
             }
         }
-        std::cout << std::endl << "You have selected " << current_floorbot.get_name() << "to control." << std::endl;
+        std::cout << "You have selected " << current_floorbot.get_name() << " to control." << std::endl;
         return 0;
     };
 
-    int input_command(std::string input) {
+    int input_command() {
+        std::string input;
         std::string command_input;
         std::string flag_input;
         std::string arg_input;
 
         std::cout << "Please enter a command or type '--help' to see a list of available commands." << std::endl;
-        std::cin >> input;
+        std::getline(std::cin, input);
+        std::cout << input;
 
         std::vector<std::string> input_list = split_string(input);
 
@@ -164,18 +165,7 @@ public:
                 break;
             case Command::help:
                 break;
-        }
-
-        return 0;
-    }
-
-        int parse_command(
-        std::string command_input,
-        std::string flag_input,
-        std::string arg_input = "",
-        Floorbot floorbot
-    ) {
-
+        };
 
         return 0;
     };
@@ -197,6 +187,8 @@ int main() {
         std::cout << "Error: CLI has not selected a floorbot correctly, exiting.";
         return 1;
     }
+
+    cli.input_command();
     
     return 0;
 }

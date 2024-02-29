@@ -1,13 +1,10 @@
 #ifndef DUMMYOBJECTS
 #define DUMMYOBJECTS
 
-#include "Floorbot.hpp"
-#include "Account.hpp"
-#include "Script.hpp"
-#include "Plugin.hpp"
-
 class DummyObjects {
 public:
+    DummyObjects() = default;
+
 // Dummy Scripts
     Script shop_demo_script = Script(
         "shop demo 1",
@@ -66,8 +63,6 @@ public:
     );
     std::vector<Floorbot> admin_linked_floorbots = { admin_fb1, admin_fb2, admin_fb3  };
     Account admin_account = Account("admin_user", true, admin_linked_floorbots);
-
-    DummyObjects() = default;
 };
 
 #endif

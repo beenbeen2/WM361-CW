@@ -1,10 +1,6 @@
 #ifndef DIAGNOSTICS
 #define DIAGNOSTICS
 
-#include <iostream>
-#include <string>
-#include <unordered_map>
-
 class Diagnostics {
 public:
     enum class Flag { print, save, submit };

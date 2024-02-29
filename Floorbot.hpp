@@ -1,12 +1,7 @@
 #ifndef FLOORBOT
 #define FLOORBOT
 
-#include <iostream>
 #include <chrono>
-#include <thread>
-#include <string>
-#include <vector>
-#include "Plugin.hpp"
 
 class Floorbot {
 private:
@@ -25,7 +20,6 @@ private:
     int patch = 0;
 
     std::chrono::system_clock::duration runtime;
-    std::string version;
     int bin_capacity;
     int battery_level;
     int battery_health;

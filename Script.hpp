@@ -1,4 +1,7 @@
-#include <string>
+#ifndef SCRIPT
+#define SCRIPT
+
+#include <vector>
 
 class Script {
 public:
@@ -13,3 +16,5 @@ public:
     std::string name;
     std::vector<std::string> command_set;
 };
+
+#endif
