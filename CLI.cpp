@@ -7,13 +7,13 @@
 #include <unordered_map>
 
 #include "DummyObjects.hpp"
-// #include "Floorbot.hpp"
-// #include "Account.hpp"
-// #include "Move.hpp"
-// #include "Diagnostics.hpp"
-// #include "Control.hpp"
-// #include "Scripts.hpp"
-// #include "Plugins.hpp"
+#include "Floorbot.hpp"
+#include "Account.hpp"
+#include "Move.hpp"
+#include "Diagnostics.hpp"
+#include "Control.hpp"
+#include "Scripts.hpp"
+#include "Plugins.hpp"
 
 class CLI {
 public:
@@ -31,6 +31,26 @@ public:
     std::unordered_map<std::string, Account> account_map = {
         {"BASIC", dummy_objects.basic_account},
         {"ADMIN", dummy_objects.admin_account},
+    };
+    enum class Command { move, diagnostics, plugins, scripts, robot };
+    std::unordered_map<std::string, Command> command_map = {
+        {"move", Command::move},
+        {"diagnostics", Command::diagnostics},
+        {"plugins", Command::plugins},
+        {"scripts", Command::scripts},
+        {"robot", Command::robot},
+    };
+
+    std::vector<std::string> split_string(std::string input) {
+        std::vector<std::string> input_list;
+        std::istringstream command_stream(input);
+
+        std::string command;
+        while (std::getline(command_stream, command, ' ')) {
+            input_list.push_back(command);
+        }
+
+        return input_list;
     };
 
     int login() {
@@ -92,14 +112,56 @@ public:
         std::cout << std::endl << "You have selected " << current_floorbot.name << "to control." << std::endl;
         return 0;
     };
+
+    int input_command(std::string input) {
+        std::vector<std::string> input_list = split_string(input);
+
+        if (input_list.empty()) {
+            std::cout << "Error: please enter a command.";
+            return 1;
+        };
+        std::string command_input = input_list[0];
+        
+        if (!command_map.count(command_input)) {
+            std::cout << "Error: invalid command entered.";
+            return 1;
+        }
+        Command command = command_map[command_input];
+
+        switch(command) {
+            case Command::move: 
+                std::cout << "moving!";
+                current_floorbot.move()
+                // move();
+                break;
+            case Command::diagnostics:
+                std::cout << "diagnosing!";
+                // diagnostics();
+                break;
+            case Command::plugins:
+                std::cout << "plugining!";
+                // plugins();
+                break;
+            case Command::scripts:
+                std::cout << "scripting!";
+                // scripts();
+                break;
+            case Command::robot:
+                std::cout << "roboting!";
+                // robot();
+                break;
+        }
+
+        return 0;
+    }
 };
 
 int main() {  
+    DummyObjects dummy_objects;
+    CLI cli;
+    
     std::cout << std::endl << "Welcome to the Floorbot CLI!" << std::endl;
 
-    DummyObjects dummy_objects;
-
-    CLI cli;
     cli.login();
     if (!cli.user_logged_in) {
         std::cout << "Error: CLI has not logged in correctly, exiting.";

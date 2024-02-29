@@ -7,39 +7,45 @@
 
 class Diagnostics {
 public:
-    enum class DiagnosticsFlag { print, save, submit };
-    std::unordered_map<std::string, DiagnosticsFlag> diagnostic_flag_map = {
-        {"--print", DiagnosticsFlag::print},
-        {"--save", DiagnosticsFlag::save},
-        {"--submit", DiagnosticsFlag::submit},
+    enum class Flag { print, save, submit };
+    std::unordered_map<std::string, Flag> diagnostic_flag_map = {
+        {"--print", Flag::print},
+        {"--save", Flag::save},
+        {"--submit", Flag::submit},
     };
 
-    int parse_input() {
+    int print(Floorbot floorbot) {
+        std::cout << "floorbot name is '" << floorbot.get_name() << "'" << std::endl;
+        std::cout << "floorbot model is '" << floorbot.get_model() << "'" << std::endl;
+        std::cout << "floorbot id is '" << floorbot.get_device_id() << "'" << std::endl;
+        std::cout << "floorbot chipset is '" << floorbot.get_chipset() << "'" << std::endl;
+        std::chrono::system_clock::duration runtime = floorbot.get_runtime();
+        std::cout << "Robot has been running for " << runtime.count() << "ns";
+        std::cout << "floorbot is on version " << floorbot.get_version() << "" << std::endl;
+        std::cout << "floorbot bin capacity is " << floorbot.get_bin_capacity() << "%" << std::endl;
+        std::cout << "floorbot battery level is " << floorbot.get_battery_level() << "%" << std::endl;
+        std::cout << "floorbot battery health is " << floorbot.get_battery_health() << "%" << std::endl;
+        std::cout << "floorbot filter health is " << floorbot.get_filter_health() << "%" << std::endl;
+        std::cout << "floorbot power usage is " << floorbot.get_power_usage() << "W" << std::endl;
 
+        return 0;
     }
 
+    int save(Floorbot floorbot, std::string filename) {
+        std::cout 
+            << "Diagnostic report for " << floorbot.get_name() 
+            << " has successfully been saved to" << filename << ".txt" << std::endl;
 
+        return 0;
+    }
+
+    int submit(Floorbot floorbot) {
+        std::cout 
+            << "Diagnostic report for " << floorbot.get_name() 
+            << " has successfully been submitted to Floorbot customer support." << std::endl;
+        
+        return 0;
+    }
 };
-
-// int main() {
-//     std::cout << "\n\n\n\nStarting!\n\n";
-
-    // std::cout << "Robot name is '" << Robot.name << "'\n";
-    // std::cout << "Robot model is '" << Robot.model << "'\n";
-    // std::cout << "Robot is on version " << Robot.get_version() << "\n";
-    // std::cout << "Robot chipset is '" << Robot.chipset << "'\n";
-    // std::cout << "Robot bin capacity is " << Robot.get_bin_capacity() << "%\n";
-    // std::cout << "Robot battery level is " << Robot.get_battery_level() << "%\n";
-    // std::cout << "Robot battery health is " << Robot.get_battery_health() << "%\n";
-    // std::cout << "Robot filter health is " << Robot.get_filter_health() << "%\n";
-    // std::cout << "Robot power usage is " << Robot.get_power_usage() << "W\n";
-
-    // std::this_thread::sleep_for(std::chrono::milliseconds(1));
-    // std::chrono::system_clock::duration runtime = Robot.get_runtime();
-    // std::cout << "Robot has been running for " << runtime.count() << "ns";
-
-    // std::cout << "\n\nDone! \n\n\n";
-//     return 1;
-// };
 
 #endif

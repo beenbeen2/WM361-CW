@@ -9,14 +9,16 @@
 
 class Floorbot {
 private:
+    std::string name;
     std::string model;
     std::string device_id;
     std::string chipset;
     std::chrono::system_clock::time_point start_time;
-    enum class MoveDirection { forward, back, right, left };
 
     int x_coord = 0;
     int y_coord = 0;
+
+    std::string version;
     int major_version = 2;
     int minor_version = 1;
     int patch = 0;
@@ -30,7 +32,7 @@ private:
     int power_usage;
 
 public:
-    std::string name;
+    enum class MoveFlag { forward, back, right, left };
 
     Floorbot() = default;
 
@@ -44,7 +46,6 @@ public:
         model(model),
         device_id(device_id),
         chipset(chipset)
-
     {
         start_time = std::chrono::system_clock::now();
         version = std::to_string(major_version) + "." + std::to_string(minor_version) + "." + std::to_string(patch);
@@ -55,13 +56,22 @@ public:
         power_usage = rand() % 1000;
     }
 
+    std::string get_name() const { return name; }
+    std::string get_model() const { return model; }
+    std::string get_device_id() const { return device_id; }
+    std::string get_chipset() const { return chipset; }
     std::chrono::system_clock::duration get_runtime() {
         std::chrono::system_clock::time_point current_time = std::chrono::system_clock::now();
         std::chrono::system_clock::duration runtime = std::chrono::duration(current_time - start_time);
         return runtime;
     }
-
-    std::string get_version() { return version; }
+    std::string get_version() {
+        version = 
+            std::to_string(major_version) + "." + 
+            std::to_string(minor_version) + "." + 
+            std::to_string(patch);
+        return version;
+    }
     int get_bin_capacity() const { return bin_capacity; }
     int get_battery_level() const { return battery_level;}
     int get_battery_health() const { return battery_health; }
@@ -72,22 +82,23 @@ public:
     int restart() { return 0; }
     int factory_reset() { return 0; }
     
-    int move(MoveDirection direction, int distance) {
+    int move(MoveFlag direction, int distance) {
         switch(direction) {
-            case MoveDirection::forward:
+            case MoveFlag::forward:
                 y_coord += distance;
                 break;
-            case MoveDirection::back:
+            case MoveFlag::back:
                 y_coord -= distance;
                 break;
-            case MoveDirection::left:
+            case MoveFlag::left:
                 x_coord += distance;
                 break;
-            case MoveDirection::right:
+            case MoveFlag::right:
                 x_coord -= distance;
                 break;
         }
-        std::cout << "Floorbot has moved " << distance << "cm to (" << x_coord << "," << y_coord << ").";
+        std::cout << "Floorbot has moved " << distance << "cm to (" 
+            << x_coord << ", " << y_coord << ")." << std::endl;
         return 0;
     }
 };
