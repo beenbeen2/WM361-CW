@@ -32,7 +32,6 @@ private:
     int filter_health;
     int power_usage;
 
-
 public:
     std::vector<Plugin> installed_plugins {};
 
@@ -62,6 +61,8 @@ public:
     std::string get_model() const { return model; }
     std::string get_device_id() const { return device_id; }
     std::string get_chipset() const { return chipset; }
+    int get_x_coord() const { return x_coord; }
+    int get_y_coord() const { return y_coord; }
     std::chrono::system_clock::duration get_runtime() {
         std::chrono::system_clock::time_point current_time = std::chrono::system_clock::now();
         std::chrono::system_clock::duration runtime = std::chrono::duration(current_time - start_time);

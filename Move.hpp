@@ -16,15 +16,16 @@ public:
     };
 
     int parse_command(Floorbot floorbot, std::string flag_input, std::string arg_input) {
-        if (arg_input.empty()) {
-            std::cout << "Error: please enter a distance value.";
-            return 1;
-        }
         if (!move_flag_map.count(flag_input)) {
             std::cout << "Error: invalid direction flag entered.";
             return 1;
         }
-        Floorbot::MoveFlag direction = move_flag_map[flag_input];
+        Flag direction = move_flag_map[flag_input];
+
+        if (arg_input.empty()) {
+            std::cout << "Error: please enter a distance value.";
+            return 1;
+        }
 
         int distance;
         try {
@@ -35,16 +36,16 @@ public:
         }
 
         switch(direction) {
-            case MoveFlag::forward:
+            case Flag::forward:
                 floorbot.move_forward(distance);
                 break;
-            case MoveFlag::back:
+            case Flag::back:
                 floorbot.move_back(distance);
                 break;
-            case MoveFlag::left:
+            case Flag::left:
                 floorbot.move_left(distance);
                 break;
-            case MoveFlag::right:
+            case Flag::right:
                 floorbot.move_right(distance);
                 break;
         }

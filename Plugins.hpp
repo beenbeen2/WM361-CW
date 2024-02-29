@@ -9,7 +9,7 @@ public:
         {"--disable", Flag::disable},
     };
 
-    int parse_command() {
+    int parse_command(Floorbot floorbot, std::string flag_input, std::string arg_input = "") {
 
     };
 

@@ -7,18 +7,31 @@
 #include <unordered_map>
 
 #include "DummyObjects.hpp"
-#include "Floorbot.hpp"
-#include "Account.hpp"
 #include "Move.hpp"
 #include "Diagnostics.hpp"
-#include "Control.hpp"
 #include "Scripts.hpp"
-#include "CommandHandler.hpp"
+#include "Plugins.hpp"
+#include "Control.hpp"
 
 class CLI {
 public:
     DummyObjects dummy_objects;
-    CommandHandler command_handler;
+    Move move;
+    Diagnostics diagnostics;
+    Plugins plugins;
+    Scripts scripts;
+    Control control;
+
+    enum class Command { move, diagnostics, plugins, scripts, control, help };
+    std::unordered_map<std::string, Command> command_map = {
+        {"move", Command::move},
+        {"diagnostics", Command::diagnostics},
+        {"plugins", Command::plugins},
+        {"scripts", Command::scripts},
+        {"control", Command::control},
+        {"--help", Command::help},
+    };
+
     bool user_logged_in = false;
     Account current_user;
     bool floorbot_selected = false;
@@ -127,16 +140,45 @@ public:
             std::cout << "Error: too many parameters enter, at most a command, flag, and argument should be entered.";
             return 1;
         };
+        if (!command_map.count(command_input)) {
+            std::cout << "Error: invalid command entered.";
+            return 1;
+        }
+        Command command = command_map[command_input];
 
-        command_handler.parse_command(
-            command_input,
-            flag_input,
-            arg_input,
-            current_floorbot
-        );
+        switch(command) {
+            case Command::move: 
+                move.parse_command(current_floorbot, flag_input, arg_input);
+                break;
+            case Command::diagnostics:
+                diagnostics.parse_command(current_floorbot, flag_input, arg_input);
+                break;
+            case Command::plugins:
+                plugins.parse_command(current_floorbot, flag_input, arg_input);
+                break;
+            case Command::scripts:
+                scripts.parse_command(current_floorbot, flag_input, arg_input);
+                break;
+            case Command::control:
+                control.parse_command(current_floorbot, flag_input, arg_input);
+                break;
+            case Command::help:
+                break;
+        }
 
         return 0;
     }
+
+        int parse_command(
+        std::string command_input,
+        std::string flag_input,
+        std::string arg_input = "",
+        Floorbot floorbot
+    ) {
+
+
+        return 0;
+    };
 };
 
 int main() {  

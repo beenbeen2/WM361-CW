@@ -14,6 +14,31 @@ public:
         {"--submit", Flag::submit},
     };
 
+    int parse_command(Floorbot floorbot, std::string flag_input, std::string arg_input = "") {
+        if (!diagnostics_flag_map.count(flag_input)) {
+            std::cout << "Error: invalid direction flag entered.";
+            return 1;
+        }
+        Flag flag = diagnostics_flag_map[flag_input];
+
+        switch(flag) {
+            case Flag::print:
+                print(floorbot);
+                break;
+            case Flag::save:
+                if (arg_input.empty()) {
+                    std::cout << "Error: Please provide a filename to save the diagnostic report to.";
+                    return 1;
+                }
+                save(floorbot, arg_input);
+                break;
+            case Flag::submit:
+                submit(floorbot);
+                break;
+        }
+        return 0;
+    }
+
     int print(Floorbot floorbot) {
         std::cout << "floorbot name is '" << floorbot.get_name() << "'" << std::endl;
         std::cout << "floorbot model is '" << floorbot.get_model() << "'" << std::endl;
