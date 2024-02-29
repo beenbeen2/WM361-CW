@@ -3,7 +3,7 @@
 #include <chrono>
 #include <thread>
 
-class Robot {
+class Floorbot {
 public:
     string name = "Unnamed Floorbot";
     string model = "Floorbot Pro 9000";
