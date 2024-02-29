@@ -1,3 +1,6 @@
+#ifndef COMMANDPARSER
+#define COMMANDPARSER
+
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -5,8 +8,6 @@
 #include <sstream>
 
 class CommandParser {
-private:
-
 public:    
     enum class Command { move, diagnostics, plugins, scripts, robot };
     // enum class ScriptFlag { list_installed, list_available, install, uninstall };
@@ -87,3 +88,5 @@ int main () {
 
     return 0;
 };
+
+#endif

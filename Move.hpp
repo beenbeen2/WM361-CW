@@ -1,3 +1,6 @@
+#ifndef MOVE
+#define MOVE
+
 #include <iostream>
 #include <string>
 #include <unordered_map>
@@ -16,6 +19,8 @@ public:
 
     int parse_input(std::string flag_input, int distance) {
         MoveDirection direction = direction_flag_map[flag_input];
-        move(direction, distance);
+        // move(direction, distance);
     }
 };
+
+#endif

@@ -3,14 +3,25 @@
 #include <thread>
 #include <string>
 
+#include "Floorbot.hpp"
+#include "Account.hpp"
+#include "Move.hpp"
+#include "Diagnostics.hpp"
+#include "Control.hpp"
+#include "Scripts.hpp"
+#include "Plugins.hpp"
+#include "DummyObjects.hpp"
+
 class CLI {
 public:
-    bool login_service_selected = false;
-    std::string selected_login_service;
+    DummyObjects dummy_objects;
     bool user_logged_in = false;
-    bool user_is_admin;
+    Account* current_user = nullptr;
+    bool floorbot_selected = false;
+    Floorbot* current_floorbot = nullptr;
 
     int login() {
+        bool login_service_selected = false;
         int selected_login_number;
         while (!login_service_selected) {
             std::cout << "Please select a service to login with: \n"
@@ -24,6 +35,7 @@ public:
                 login_service_selected = true;
             }
         }
+        std::string selected_login_service;
         switch(selected_login_number) {
             case 1:
                 selected_login_service = "Google";
@@ -36,25 +48,40 @@ public:
                 break;
         }
         std::cout << "Taking you to " << selected_login_service << " to login...\n\n";
-        
+
         std::string admin_user_selection;
         while(!user_logged_in) {
-            std::cout << "(Login simulated for demonstration purposes, enter [ADMIN] for advanced user, or [BASIC] for basic features.)\n";
+            std::cout << "(Login simulated for demonstration purposes, enter 'ADMIN' for advanced/technical user, or 'BASIC' for only basic features.)\n";
             std::cin >> admin_user_selection;
             if (admin_user_selection == "ADMIN") {
-                user_is_admin = true;
+                current_user = &dummy_objects.admin_account;
                 user_logged_in = true;
-                std::cout << "\nWelcome back, admin_user!";
             } else if (admin_user_selection == "BASIC") {
-                user_is_admin = false;
+                current_user = &dummy_objects.basic_account;
                 user_logged_in = true;
-                std::cout << "\nWelcome back, basic_user!";
             } else {
                 std::cout << "Error: invalid command entered, please type either 'ADMIN' or 'BASIC'.\n\n";
             }
         };
-
+        std::cout << "\nWelcome back, " << current_user->username << "!";
         return 0;
+    }
+
+    int select_robot() {
+        int selected_floorbot_number;
+        while (!floorbot_selected) {
+            std::cout << "Please select a floorbot linked to your account to begin controlling: \n";
+            int i = 1;
+            for (Floorbot linked_floorbot : current_user->linked_floorbots) {
+                std::cout << "[" << std::to_string(i) << "] " << linked_floorbot.name << std::endl;
+            }
+            std::cin >> selected_floorbot_number;
+            if (selected_floorbot_number < 1 || selected_floorbot_number > current_user->linked_floorbots.size()) {
+                std::cout << "Error: incorrect number selected, please enter a number between 1-3.\n\n";
+            } else {
+                floorbot_selected = true;
+            }
+        }
     }
 };
 
@@ -63,6 +90,8 @@ int main() {
 
     CLI cli;
     cli.login();
+    
+
 
     return 0;
 }
