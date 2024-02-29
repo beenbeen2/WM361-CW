@@ -1,49 +1,47 @@
+#include <iostream>
 #include <chrono>
 #include <thread>
 #include <string>
-#include "CTurtle.hpp"
 
-using namespace std;
-
-namespace ct = cturtle;
-
-int main(int argc, char** argv) {
-    string command;
-    int value;
-
-    string device_id;
-    cout << "Please enter your device ID or type 'EXIT' to exit CLI: ";
-    cin >> command;
-    if (command == "EXIT") {
-        cout << "THIS";
-        exit(1);
-    } else {
-        device_id = command;
+int main(int argc, char** argv) {  
+    // Login/Authentication
+    int selected_login_number;
+    std::cout << "Welcome to the Floorbot CLI!\n";
+    std::cout << "Please select a service to login with: \n"
+        "[1] Google\n"
+        "[2] Apple\n"
+        "[3] Facebook\n";
+    std::cin >> selected_login_number;
+    std::string selected_login_service;
+    switch(selected_login_number) {
+        case 1:
+            selected_login_service = "Google";
+        case 2:
+            selected_login_service = "Apple";
+        case 3:
+            selected_login_service = "Facebook";
     }
+    std::cout << "Taking you to " << selected_login_service << "...";
 
-    string state;
-    cout << "Please select a mode from D(iagnostics), C(ontrol), M(odification), or S(oftware Install): ";
-    cin >> command;
-
-
-    ct::TurtleScreen scr;
-    ct::Turtle turtle(scr);
-    turtle.speed(ct::TS_SLOWEST);
-
-    while (true) {
-        cout << "Please enter a command from L(eft), R(ight), F(orward), B(ack): ";
-        cin >> command;
-        cout << "Please enter a distance or angle: ";
-        cin >> value;
-        if (command == "Left") {
-            turtle.left(value);
-            break;
-        } else if (command == "Left") {
-                turtle.left(value);
-                break;
+    bool user_logged_in = false;
+    bool user_is_admin;
+    std::string admin_user_selection;
+    while(!user_logged_in) {
+        std::cout << "Login simulated for demonstration purposes, enter [ADMIN] for advanced user, or [BASIC] for basic features:\n";
+        std::cin >> admin_user_selection;
+        if (admin_user_selection == "ADMIN") {
+            user_is_admin = true;
+            user_logged_in = true;
+            std::cout << "Welcome back, admin_user!";
+        } else if (admin_user_selection == "BASIC") {
+            user_is_admin = false;
+            user_logged_in = true;
+            std::cout << "Welcome back, basic_user!";
+        } else {
+            std::cout << "Error: invalid command entered, please type either 'ADMIN' or 'BASIC'.\n";
         }
-        std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    }
-    scr.bye();
+    };
+
+
     return 0;
 }
