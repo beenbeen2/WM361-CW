@@ -107,6 +107,10 @@ int main() {
     }
 
     cli.select_robot();
+    if (!cli.floorbot_selected) {
+        std::cout << "Error: CLI has not selected a floorbot correctly, exiting.";
+        return 1;
+    }
     
     return 0;
 }
