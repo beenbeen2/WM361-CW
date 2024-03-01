@@ -1,8 +1,6 @@
 #ifndef SCRIPT
 #define SCRIPT
 
-#include <vector>
-
 class Script {
 public:
     Script(

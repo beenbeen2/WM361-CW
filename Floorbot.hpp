@@ -1,30 +1,18 @@
 #ifndef FLOORBOT
 #define FLOORBOT
 
-#include <chrono>
-
 class Floorbot {
 private:
-    std::string name;
-    std::string model;
-    std::string device_id;
-    std::string chipset;
+    bool is_floorbot_on = 1;
+
+    std::string name, model, device_id, chipset, version;
+    int bin_capacity, battery_level, battery_health, filter_health, power_usage;
+
+    int major_version = 2, minor_version = 1, patch = 0;
+    int x_coord = 0, y_coord = 0;
+
     std::chrono::system_clock::time_point start_time;
-
-    int x_coord = 0;
-    int y_coord = 0;
-
-    std::string version;
-    int major_version = 2;
-    int minor_version = 1;
-    int patch = 0;
-
     std::chrono::system_clock::duration runtime;
-    int bin_capacity;
-    int battery_level;
-    int battery_health;
-    int filter_health;
-    int power_usage;
 
 public:
     std::vector<Plugin> installed_plugins {};
@@ -42,7 +30,6 @@ public:
         device_id(device_id),
         chipset(chipset)
     {
-        start_time = std::chrono::system_clock::now();
         version = std::to_string(major_version) + "." + std::to_string(minor_version) + "." + std::to_string(patch);
         bin_capacity = rand() % 100 + 1;
         battery_level = rand() % 100 + 1;
@@ -57,6 +44,12 @@ public:
     std::string get_chipset() const { return chipset; }
     int get_x_coord() const { return x_coord; }
     int get_y_coord() const { return y_coord; }
+    int get_bin_capacity() const { return bin_capacity; }
+    int get_battery_level() const { return battery_level;}
+    int get_battery_health() const { return battery_health; }
+    int get_filter_health() const { return filter_health; }
+    int get_power_usage() const { return power_usage; }
+
     std::chrono::system_clock::duration get_runtime() {
         std::chrono::system_clock::time_point current_time = std::chrono::system_clock::now();
         std::chrono::system_clock::duration runtime = std::chrono::duration(current_time - start_time);
@@ -69,11 +62,6 @@ public:
             std::to_string(patch);
         return version;
     }
-    int get_bin_capacity() const { return bin_capacity; }
-    int get_battery_level() const { return battery_level;}
-    int get_battery_health() const { return battery_health; }
-    int get_filter_health() const { return filter_health; }
-    int get_power_usage() const { return power_usage; }
     
     int move_forward(int distance) {
         y_coord += distance;
@@ -92,9 +80,31 @@ public:
         return 0;
     }
 
-    int power_off() { return 0; }
-    int restart() { return 0; }
-    int factory_reset() { return 0; }
+    int power_on() {
+        is_floorbot_on = 1;
+        start_time = std::chrono::system_clock::now();
+        return 0;
+    }
+    int power_off() { 
+        is_floorbot_on = 0;
+        power_on();
+        return 0;
+    }
+    int restart() {
+        power_off();
+        power_on();        
+        return 0;
+    }
+    int factory_reset() {
+        major_version = 1;
+        minor_version = 0;
+        patch = 0;
+        get_version();
+
+        installed_plugins = {};
+        restart();
+        return 0;
+    }
 };
 
 #endif

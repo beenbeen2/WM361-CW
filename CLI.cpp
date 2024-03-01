@@ -1,4 +1,9 @@
 #include <sstream>
+#include <string>
+#include <vector>
+#include <chrono>
+#include <unordered_map>
+#include <iostream>
 
 #include "Plugin.hpp"
 #include "Script.hpp"
@@ -20,7 +25,7 @@ public:
     Scripts scripts;
     Control control;
 
-    enum class Command { move, diagnostics, plugins, scripts, control, help };
+    enum class Command { move, diagnostics, plugins, scripts, control, help, exit };
     std::unordered_map<std::string, Command> command_map = {
         {"move", Command::move},
         {"diagnostics", Command::diagnostics},
@@ -28,6 +33,7 @@ public:
         {"scripts", Command::scripts},
         {"control", Command::control},
         {"--help", Command::help},
+        {"EXIT", Command::exit},
     };
 
     bool user_logged_in = false;
@@ -45,7 +51,7 @@ public:
         {"2", dummy_objects.admin_account},
     };
 
-    std::vector<std::string> split_string(std::string input) {
+    std::vector<std::string> string_to_vector(std::string input) {
         std::vector<std::string> input_list;
         std::istringstream command_stream(input);
 
@@ -56,6 +62,31 @@ public:
 
         return input_list;
     };
+
+    bool string_to_bool(std::string input) {
+        std::unordered_map<std::string, bool> bool_map = {
+            {"0", false},
+            {"false", false},
+            {"False", false},
+            {"No", false},
+            {"no", false},
+            {"N", false},
+            {"n", false},
+            {"1", false},
+            {"true", false},
+            {"True", false},
+            {"Yes", false},
+            {"yes", false},
+            {"Y", false},
+            {"y", false}
+        };
+        if (!bool_map.count(input)) {
+            std::cout << "Error: invalid yes/no entered, valid options look like '0', 'yes', 'true' etc.";
+        }
+        bool bool_input = bool_map[input];
+        return bool_input;
+    };
+    
 
     int login() {
         bool login_service_selected = false;
@@ -119,25 +150,27 @@ public:
         return 0;
     };
 
-    int input_command() {
+    std::string input_command() {
         std::string command_str;
         std::string subcommand_str;
-
-        std::cout << "Please enter a command or type '--help' to see a list of available commands:" << std::endl;
         std::cin >> command_str;
         std::getline(std::cin, subcommand_str);
         std::stringstream linestream(subcommand_str);
         // Workaround for issues with getline() not pausing for user input.
         std::string input = command_str + linestream.str();
-        if (input.empty()) {
-            std::cout << "Error: please enter a command.";
-            return 1;
-        };
+        return input;
+    };
 
+    int parse_command(std::string input) {
         std::string command_input;
         std::string flag_input;
         std::string arg_input;
-        std::vector<std::string> input_list = split_string(input);
+
+        if (input.empty()) {
+            std::cout << "Error: please enter a command.";
+        };
+
+        std::vector<std::string> input_list = string_to_vector(input);
         if (input_list.size() > 0) { command_input = input_list[0]; };
         if (input_list.size() > 1) { flag_input = input_list[1]; };
         if (input_list.size() > 2) { arg_input = input_list[2]; };
@@ -151,6 +184,7 @@ public:
         }
         Command command = command_map[command_input];
 
+        std::cout << std::endl;
         switch(command) {
             case Command::move: 
                 move.parse_command(current_floorbot, flag_input, arg_input);
@@ -169,6 +203,9 @@ public:
                 break;
             case Command::help:
                 break;
+            case Command::exit:
+                std::cout << "Exiting Floorbot CLI." << std::endl;
+                exit(0);
         };
 
         return 0;
@@ -192,7 +229,13 @@ int main() {
         return 1;
     }
 
-    cli.input_command();
-    
+    std::cout << std::endl << "Please enter a command, "
+        << "type '--help' to see a list of available commands, "
+        << "or 'EXIT' to exit the CLI:" << std::endl;
+    while(true) {
+        std::string input = cli.input_command();
+        // cli.parse_command(input);
+        cli.string_to_bool(input);
+    }
     return 0;
 }

@@ -1,15 +1,12 @@
 #ifndef MOVE
 #define MOVE
 
-#include <unordered_map>
-#include <iostream>
-
 class Move {
 public:
     enum class Flag { forward, back, right, left };
     std::unordered_map<std::string, Flag> move_flag_map = {
         {"--forward", Flag::forward},
-        {"--backward", Flag::back},
+        {"--back", Flag::back},
         {"--right", Flag::right},
         {"--left", Flag::left},
     };

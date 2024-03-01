@@ -1,8 +1,6 @@
 #ifndef PLUGIN
 #define PLUGIN
 
-#include <string>
-
 class Plugin {
 public:
     Plugin(
