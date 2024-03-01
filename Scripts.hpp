@@ -1,5 +1,14 @@
 #ifndef SCRIPTS
 #define SCRIPTS
+
+#include <iostream>
+#include <string>
+#include <vector>
+#include <unordered_map>
+#include <sstream>
+#include "Script.hpp"
+#include "Floorbot.hpp"
+#include "DummyObjects.hpp"
   
 class Scripts {
 public:

@@ -1,6 +1,11 @@
 #ifndef MOVE
 #define MOVE
 
+#include <iostream>
+#include <string>
+#include <unordered_map>
+#include "Floorbot.hpp"
+
 class Move {
 public:
     enum class Flag { forward, back, right, left };

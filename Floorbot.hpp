@@ -1,6 +1,11 @@
 #ifndef FLOORBOT
 #define FLOORBOT
 
+#include <string>
+#include <chrono>
+#include <vector>
+#include "Plugin.hpp"
+
 class Floorbot {
 private:
     bool is_floorbot_on = 1;
@@ -23,12 +28,14 @@ public:
         std::string name,
         std::string model,
         std::string device_id,
-        std::string chipset
+        std::string chipset,
+        std::vector<Plugin> installed_plugins
     ):
         name(name),
         model(model),
         device_id(device_id),
-        chipset(chipset)
+        chipset(chipset),
+        installed_plugins(installed_plugins)
     {
         version = std::to_string(major_version) + "." + std::to_string(minor_version) + "." + std::to_string(patch);
         bin_capacity = rand() % 100 + 1;

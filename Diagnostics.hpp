@@ -1,6 +1,11 @@
 #ifndef DIAGNOSTICS
 #define DIAGNOSTICS
 
+#include <iostream>
+#include <unordered_map>
+#include <chrono>
+#include <fstream>
+
 class Diagnostics {
 private:
     std::string file_extension = ".txt";

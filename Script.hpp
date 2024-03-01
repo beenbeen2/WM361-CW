@@ -1,6 +1,9 @@
 #ifndef SCRIPT
 #define SCRIPT
 
+#include <string>
+#include <vector>
+
 class Script {
 public:
     Script(

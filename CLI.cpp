@@ -1,11 +1,9 @@
-#include <sstream>
+#include <iostream>
 #include <string>
 #include <vector>
-#include <chrono>
 #include <unordered_map>
-#include <iostream>
-#include <fstream>
 
+#include "Utils.hpp"
 #include "Plugin.hpp"
 #include "Script.hpp"
 #include "Floorbot.hpp"
@@ -17,7 +15,7 @@
 #include "Plugins.hpp"
 #include "Control.hpp"
 
-class CLI {
+class CLI: public Utils {
 public:
     DummyObjects dummy_objects;
     Move move;
@@ -51,45 +49,6 @@ public:
         {"1", dummy_objects.basic_account},
         {"2", dummy_objects.admin_account},
     };
-
-    std::vector<std::string> string_to_vector(std::string input) {
-        std::vector<std::string> input_list;
-        std::istringstream command_stream(input);
-
-        std::string command;
-        while (std::getline(command_stream, command, ' ')) {
-            input_list.push_back(command);
-        }
-
-        return input_list;
-    };
-
-    bool string_to_bool(std::string input) {
-        std::unordered_map<std::string, bool> bool_map = {
-            {"0", false},
-            {"false", false},
-            {"False", false},
-            {"NO", false},
-            {"No", false},
-            {"no", false},
-            {"N", false},
-            {"n", false},
-            {"1", false},
-            {"true", false},
-            {"True", false},
-            {"YES", false},
-            {"Yes", false},
-            {"yes", false},
-            {"Y", false},
-            {"y", false}
-        };
-        if (!bool_map.count(input)) {
-            std::cout << "Error: invalid yes/no entered, valid options look like '0', 'yes', 'true' etc.";
-        }
-        bool bool_input = bool_map[input];
-        return bool_input;
-    };
-    
 
     int login() {
         bool login_service_selected = false;
@@ -151,17 +110,6 @@ public:
         }
         std::cout << "You have selected " << current_floorbot.get_name() << " to control." << std::endl;
         return 0;
-    };
-
-    std::string input_command() {
-        std::string command_str;
-        std::string subcommand_str;
-        std::cin >> command_str;
-        std::getline(std::cin, subcommand_str);
-        std::stringstream linestream(subcommand_str);
-        // Workaround for issues with getline() not halting programme for user input.
-        std::string input = command_str + linestream.str();
-        return input;
     };
 
     int parse_command(std::string input) {
@@ -236,7 +184,7 @@ int main() {
         << "type '--help' to see a list of available commands, "
         << "or 'EXIT' to exit the CLI:" << std::endl;
     while(true) {
-        std::string input = cli.input_command();
+        std::string input = cli.get_input_command();
         cli.parse_command(input);
     }
     return 0;

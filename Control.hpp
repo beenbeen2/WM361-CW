@@ -1,7 +1,11 @@
 #ifndef CONTROL
 #define CONTROL
 
-class Control {
+#include <unordered_map>
+#include "Utils.hpp"
+#include "Floorbot.hpp"
+
+class Control: public Utils {
 public:
     enum class Flag { restart, power_off, power_on, factory_reset };
     std::unordered_map<std::string, Flag> flag_map = {
@@ -30,6 +34,7 @@ public:
                 break;
             case Flag::factory_reset:
                 factory_reset(floorbot);
+
                 break;
         }
         return 0;
@@ -57,11 +62,17 @@ public:
     };
 
     int factory_reset(Floorbot floorbot) {
-        // add confirmation?
-        std::cout << "Factory resetting " << floorbot.get_name() << "..." << std::endl;
-        floorbot.factory_reset();
-        // select another robot?
-        std::cout << floorbot.get_name() << " reset to factory conditions." << std::endl;
+        std::cout 
+            << "This will erase all installed updates and plugins from the floorbot, "
+            << "are you sure you want to continue? ";
+        if (get_confirmation(false)) {
+            std::cout << "Factory resetting " << floorbot.get_name() << "..." << std::endl;
+            floorbot.factory_reset();
+            // select another robot?
+            std::cout << floorbot.get_name() << " reset to factory conditions." << std::endl;
+        } else {
+            std::cout << "Factory reset cancelled." << std::endl;
+        };
         return 0;
     };
 };
