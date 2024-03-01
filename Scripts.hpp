@@ -21,20 +21,25 @@ public:
         }
         Flag flag = flag_map[flag_input];
         
+        bool only_installed;
+        std::string scriptname;
+        if (flag == Flag::list) {
+            std::istringstream(arg_input) >> only_installed;
+        } else {
+            scriptname = arg_input;
+        }
         switch(flag) {
             case Flag::list:
-                bool only_installed;
-                istringstream(arg_input) >> only_installed;
-                list();
+                list(only_installed);
                 break;
             case Flag::install:
-                install();
+                install(scriptname);
                 break;
             case Flag::uninstall:
-                uninstall();
+                uninstall(scriptname);
                 break;
             case Flag::run:
-                run();
+                run(scriptname);
                 break;
         }
         return 0;

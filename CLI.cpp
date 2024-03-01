@@ -4,6 +4,7 @@
 #include <chrono>
 #include <unordered_map>
 #include <iostream>
+#include <fstream>
 
 #include "Plugin.hpp"
 #include "Script.hpp"
@@ -68,6 +69,7 @@ public:
             {"0", false},
             {"false", false},
             {"False", false},
+            {"NO", false},
             {"No", false},
             {"no", false},
             {"N", false},
@@ -75,6 +77,7 @@ public:
             {"1", false},
             {"true", false},
             {"True", false},
+            {"YES", false},
             {"Yes", false},
             {"yes", false},
             {"Y", false},
@@ -156,7 +159,7 @@ public:
         std::cin >> command_str;
         std::getline(std::cin, subcommand_str);
         std::stringstream linestream(subcommand_str);
-        // Workaround for issues with getline() not pausing for user input.
+        // Workaround for issues with getline() not halting programme for user input.
         std::string input = command_str + linestream.str();
         return input;
     };
@@ -234,8 +237,7 @@ int main() {
         << "or 'EXIT' to exit the CLI:" << std::endl;
     while(true) {
         std::string input = cli.input_command();
-        // cli.parse_command(input);
-        cli.string_to_bool(input);
+        cli.parse_command(input);
     }
     return 0;
 }
