@@ -15,7 +15,7 @@ public:
     std::vector<Script> installed_scripts {};
 
     int parse_command(Floorbot floorbot, std::string flag_input, std::string arg_input) {
-
+        return 0;
     }
 
     int list(bool only_installed) {

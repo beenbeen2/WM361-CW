@@ -1,5 +1,4 @@
 #include <sstream>
-#include <sstream>
 
 #include "Plugin.hpp"
 #include "Script.hpp"
@@ -42,8 +41,8 @@ public:
         {"3", "Facebook"},
     };
     std::unordered_map<std::string, Account> account_map = {
-        {"BASIC", dummy_objects.basic_account},
-        {"ADMIN", dummy_objects.admin_account},
+        {"1", dummy_objects.basic_account},
+        {"2", dummy_objects.admin_account},
     };
 
     std::vector<std::string> split_string(std::string input) {
@@ -82,11 +81,13 @@ public:
 // Dummy login proccess for demonstration.
         std::string account_selection;
         while(!user_logged_in) {
-            std::cout << "(Login simulated for demonstration purposes, enter 'ADMIN' for advanced/technical user, or 'BASIC' for only basic features.)" << std::endl;
+            std::cout << "(Login simulated for demonstration purposes, do you want to act as an admin/advanced user or a basic user:)" << std::endl
+                << "[1] Basic User" << std::endl
+                << "[2] Admin/Advanced User" << std::endl;
             std::cin >> account_selection;
 
             if (!account_map.count(account_selection)) {
-                std::cout << "Error: invalid command entered, please type either 'ADMIN' or 'BASIC'.\n\n";
+                std::cout << "Error: incorrect number selected, please enter a number between 1-2.\n\n";
                 continue;
             }
 
@@ -119,21 +120,24 @@ public:
     };
 
     int input_command() {
-        std::string input;
-        std::string command_input;
-        std::string flag_input;
-        std::string arg_input;
+        std::string command_str;
+        std::string subcommand_str;
 
-        std::cout << "Please enter a command or type '--help' to see a list of available commands." << std::endl;
-        std::getline(std::cin, input);
-        std::cout << input;
-
-        std::vector<std::string> input_list = split_string(input);
-
-        if (input_list.size() == 0) {
+        std::cout << "Please enter a command or type '--help' to see a list of available commands:" << std::endl;
+        std::cin >> command_str;
+        std::getline(std::cin, subcommand_str);
+        std::stringstream linestream(subcommand_str);
+        // Workaround for issues with getline() not pausing for user input.
+        std::string input = command_str + linestream.str();
+        if (input.empty()) {
             std::cout << "Error: please enter a command.";
             return 1;
         };
+
+        std::string command_input;
+        std::string flag_input;
+        std::string arg_input;
+        std::vector<std::string> input_list = split_string(input);
         if (input_list.size() > 0) { command_input = input_list[0]; };
         if (input_list.size() > 1) { flag_input = input_list[1]; };
         if (input_list.size() > 2) { arg_input = input_list[2]; };
