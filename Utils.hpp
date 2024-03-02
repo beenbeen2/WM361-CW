@@ -9,7 +9,7 @@
 
 class Utils {
 public:
-    std::vector<std::string> string_to_vector(std::string input) {
+    std::vector<std::string> split_command(std::string input) {
         std::vector<std::string> input_list;
         std::istringstream command_stream(input);
 
@@ -17,7 +17,6 @@ public:
         while (std::getline(command_stream, command, ' ')) {
             input_list.push_back(command);
         }
-
         return input_list;
     };
 

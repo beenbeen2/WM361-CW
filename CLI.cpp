@@ -3,26 +3,25 @@
 #include <vector>
 #include <unordered_map>
 
+#include "CLICache.hpp"
+#include "Database.hpp"
 #include "Utils.hpp"
-#include "Plugin.hpp"
-#include "Script.hpp"
-#include "Floorbot.hpp"
-#include "Account.hpp"
-#include "DummyObjects.hpp"
-#include "Move.hpp"
-#include "Diagnostics.hpp"
-#include "Scripts.hpp"
-#include "Plugins.hpp"
-#include "Control.hpp"
 
-class CLI: public Utils {
+#include "handlers/MoveHandler.hpp"
+#include "handlers/DiagnosticsHandler.hpp"
+#include "handlers/ScriptsHandler.hpp"
+#include "handlers/PluginsHandler.hpp"
+#include "handlers/ControlHandler.hpp"
+
+class CLI: virtual CLICache {
 public:
-    DummyObjects dummy_objects;
-    Move move;
-    Diagnostics diagnostics;
-    Plugins plugins;
-    Scripts scripts;
-    Control control;
+    Database database;
+    Utils utils;
+    MoveHandler move;
+    DiagnosticsHandler diagnostics;
+    ScriptsHandler scripts;
+    PluginsHandler plugins;
+    ControlHandler control;
 
     enum class Command { move, diagnostics, plugins, scripts, control, help, exit };
     std::unordered_map<std::string, Command> command_map = {
@@ -35,19 +34,14 @@ public:
         {"EXIT", Command::exit},
     };
 
-    bool user_logged_in = false;
-    Account current_user;
-    bool floorbot_selected = false;
-    Floorbot current_floorbot;
-
     std::unordered_map<std::string, std::string> login_service_map = {
         {"1", "Google"},
         {"2", "Apple"},
         {"3", "Facebook"},
     };
     std::unordered_map<std::string, Account> account_map = {
-        {"1", dummy_objects.basic_account},
-        {"2", dummy_objects.admin_account},
+        {"1", database.basic_account},
+        {"2", database.admin_account},
     };
 
     int login() {
@@ -121,7 +115,7 @@ public:
             std::cout << "Error: please enter a command.";
         };
 
-        std::vector<std::string> input_list = string_to_vector(input);
+        std::vector<std::string> input_list = utils.split_command(input);
         if (input_list.size() > 0) { command_input = input_list[0]; };
         if (input_list.size() > 1) { flag_input = input_list[1]; };
         if (input_list.size() > 2) { arg_input = input_list[2]; };
