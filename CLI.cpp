@@ -13,8 +13,8 @@
 #include "handlers/PluginsHandler.hpp"
 #include "handlers/ControlHandler.hpp"
 
-class CLI: virtual CLICache {
-public:
+class CLI: virtual public CLICache {
+private:
     Database database;
     Utils utils;
     MoveHandler move;
@@ -23,6 +23,7 @@ public:
     PluginsHandler plugins;
     ControlHandler control;
 
+public:
     enum class Command { move, diagnostics, plugins, scripts, control, help, exit };
     std::unordered_map<std::string, Command> command_map = {
         {"move", Command::move},
@@ -155,10 +156,17 @@ public:
 
         return 0;
     };
+
+    int enter_command() {
+        std::string input = utils.get_input_command();
+        parse_command(input);
+        return 0;
+    };
 };
 
 int main() {  
     CLI cli;
+    Utils utils;
     
     std::cout << std::endl << "Welcome to the Floorbot CLI!" << std::endl;
 
@@ -167,7 +175,6 @@ int main() {
         std::cout << "Error: CLI has not logged in correctly, exiting.";
         return 1;
     }
-
     cli.select_robot();
     if (!cli.floorbot_selected) {
         std::cout << "Error: CLI has not selected a floorbot correctly, exiting.";
@@ -177,9 +184,6 @@ int main() {
     std::cout << std::endl << "Please enter a command, "
         << "type '--help' to see a list of available commands, "
         << "or 'EXIT' to exit the CLI:" << std::endl;
-    while(true) {
-        std::string input = cli.get_input_command();
-        cli.parse_command(input);
-    }
+    while(true) { cli.enter_command(); }
     return 0;
 }

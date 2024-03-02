@@ -1,3 +1,5 @@
+#ifndef CLICACHE
+#define CLICACHE
 
 #include "./components/Script.hpp"
 #include "./components/Plugin.hpp"
@@ -9,8 +11,10 @@
 #include "Database.hpp"
 
 class CLICache {
-public:
+private:
     Database database;
+
+public:
     bool user_logged_in = false;
     Account current_user;
     bool floorbot_selected = false;
@@ -20,3 +24,5 @@ public:
         database.snake_script
     };
 };
+
+#endif

@@ -5,11 +5,12 @@
 #include "../Database.hpp"
 #include "../Utils.hpp"
   
-class ScriptsHandler: virtual CLICache {
-public:
+class ScriptsHandler: virtual private CLICache {
+private:
     Database database;
     Utils utils;
-    
+
+public: 
     enum class ScriptsFlag { list, install, uninstall, run };
     std::unordered_map<std::string, ScriptsFlag> scripts_flag_map = {
         {"--list", ScriptsFlag::list},
@@ -19,7 +20,7 @@ public:
     };
 
     bool script_is_available(std::string scriptname) {
-        for (Script script : available_scripts) {
+        for (Script script : database.available_scripts) {
             if (script.name == scriptname) { return true; }
         }
         return false;
@@ -31,7 +32,7 @@ public:
         return false;
     }
 
-    int parse_scripts_command(Floorbot floorbot, std::string flag_input, std::string arg_input) {
+    int parse_command(Floorbot floorbot, std::string flag_input, std::string arg_input) {
         if (!scripts_flag_map.count(flag_input)) {
             std::cout << "Error: invalid flag entered.";
             return 1;
@@ -70,7 +71,7 @@ public:
                 i++;
             }
         } else {
-            for (Script script : available_scripts) {
+            for (Script script : database.available_scripts) {
                 std::cout << std::to_string(i) << ". " << script.name << std::endl;
                 i++;
             }
@@ -101,7 +102,7 @@ public:
         std::cout << "Searching for " << scriptname << "..."  << std::endl;
         std::vector<std::string> command_set;
         bool script_found = false;
-        for (Script script : available_scripts) {
+        for (Script script : database.available_scripts) {
             if (script.name == scriptname) {
                 command_set = script.command_set;
                 script_found = true;

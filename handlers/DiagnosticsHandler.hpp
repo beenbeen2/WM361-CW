@@ -5,13 +5,13 @@
 #include "../Database.hpp"
 #include "../Utils.hpp"
 
-class DiagnosticsHandler: virtual CLICache {
+class DiagnosticsHandler: virtual private CLICache {
 private:
+    Database database;
+    Utils utils;
     std::string file_extension = ".txt";
 
 public:
-    Database database;
-    Utils utils;
     enum class Flag { print, save, submit };
     std::unordered_map<std::string, Flag> flag_map = {
         {"--print", Flag::print},
@@ -19,7 +19,7 @@ public:
         {"--submit", Flag::submit},
     };
 
-    int parse_diagnostics_command(Floorbot floorbot, std::string flag_input, std::string arg_input = "") {
+    int parse_command(Floorbot floorbot, std::string flag_input, std::string arg_input = "") {
         if (!flag_map.count(flag_input)) {
             std::cout << "Error: invalid direction flag entered.";
             return 1;

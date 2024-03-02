@@ -5,11 +5,12 @@
 #include "../Database.hpp"
 #include "../Utils.hpp"
 
-class MoveHandler: virtual CLICache {
-public:
+class MoveHandler: virtual private CLICache {
+private:
     Database database;
     Utils utils;
 
+public:
     enum class Flag { forward, back, right, left };
     std::unordered_map<std::string, Flag> flag_map = {
         {"--forward", Flag::forward},
@@ -18,7 +19,7 @@ public:
         {"--left", Flag::left},
     };
 
-    int parse_move_command(Floorbot floorbot, std::string flag_input, std::string arg_input) {
+    int parse_command(Floorbot floorbot, std::string flag_input, std::string arg_input) {
         if (!flag_map.count(flag_input)) {
             std::cout << "Error: invalid direction flag entered.";
             return 1;

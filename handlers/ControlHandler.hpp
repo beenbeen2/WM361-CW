@@ -5,11 +5,12 @@
 #include "../Database.hpp"
 #include "../Utils.hpp"
 
-class ControlHandler: virtual CLICache {
-public:
+class ControlHandler: virtual private CLICache {
+private:
     Database database;
     Utils utils;
 
+public:
     enum class Flag { restart, power_off, power_on, factory_reset };
     std::unordered_map<std::string, Flag> flag_map = {
         {"--restart", Flag::restart},
@@ -67,7 +68,7 @@ public:
         std::cout 
             << "This will erase all installed updates and plugins from the floorbot, "
             << "are you sure you want to continue? ";
-        if (get_confirmation(false)) {
+        if (utils.get_confirmation(false)) {
             std::cout << "Factory resetting " << floorbot.get_name() << "..." << std::endl;
             floorbot.factory_reset();
             // select another robot?
