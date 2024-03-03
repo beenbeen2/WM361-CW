@@ -10,24 +10,25 @@ private:
     Database database;
     Utils utils;
 
+    std::unordered_map<std::string, Script> installed_scripts_map;
+    std::unordered_map<std::string, Script> available_scripts_map;
+
 public: 
-    enum class ScriptsFlag { list, install, uninstall, run };
-    std::unordered_map<std::string, ScriptsFlag> scripts_flag_map = {
-        {"--list", ScriptsFlag::list},
-        {"--install", ScriptsFlag::install},
-        {"--uninstall", ScriptsFlag::uninstall},
-        {"--run", ScriptsFlag::run},
+    enum class Flag { list, install, uninstall, run };
+    std::unordered_map<std::string, Flag> flag_map = {
+        {"--list", Flag::list},
+        {"--install", Flag::install},
+        {"--uninstall", Flag::uninstall},
+        {"--run", Flag::run},
     };
 
     std::unordered_map<std::string, Script> get_available_scripts_map() {
-        std::unordered_map<std::string, Script> available_scripts_map;
         for (Script script : database.available_scripts) {
             available_scripts_map[script.name] = script;
         }
         return available_scripts_map;
     }
     std::unordered_map<std::string, Script> get_installed_scripts_map() {
-        std::unordered_map<std::string, Script> installed_scripts_map;
         for (Script script : installed_scripts) {
             installed_scripts_map[script.name] = script;
         }
@@ -35,24 +36,24 @@ public:
     }
 
     int parse_command(Floorbot floorbot, std::string flag_input, std::string arg_input) {
-        if (!scripts_flag_map.count(flag_input)) {
+        if (!flag_map.count(flag_input)) {
             std::cout << "Error: invalid flag entered." << std::endl;
             return 1;
         }
-        ScriptsFlag flag = scripts_flag_map[flag_input];
+        Flag flag = flag_map[flag_input];
         std::string scriptname = arg_input;
         
         switch(flag) {
-            case ScriptsFlag::list:
+            case Flag::list:
                 list();
                 break;
-            case ScriptsFlag::install:
+            case Flag::install:
                 install(scriptname);
                 break;
-            case ScriptsFlag::uninstall:
+            case Flag::uninstall:
                 uninstall(scriptname);
                 break;
-            case ScriptsFlag::run:
+            case Flag::run:
                 run(scriptname);
                 break;
         }
@@ -63,7 +64,7 @@ public:
         bool only_installed;
         if (installed_scripts.empty()) {
             std::cout << "No scripts are installed! Showing all scripts available for download:" << std::endl;
-            only_installed = true;
+            only_installed = false;
         } else {
             std::cout << "List only installed scripts?" << std::endl;
             only_installed = utils.get_confirmation(false);
@@ -85,38 +86,39 @@ public:
         return 0;
     }
     
-    int install(std::string scriptname) {
-        if (!get_available_scripts_map().count(scriptname)) {
+    int install(std::string script_name) {
+        if (!get_available_scripts_map().count(script_name)) {
             std::cout << "Error: script could not be located, is the script name correct?" << std::endl;
             return 1;
         }
-        if (!get_installed_scripts_map().count(scriptname)) {
+        if (get_installed_scripts_map().count(script_name)) {
             std::cout << "Error: script is already installed!" << std::endl;
             return 1;
         }
-        std::cout << "Installing " << scriptname << "..." << std::endl;
-        Script script_to_install = get_available_scripts_map()[scriptname];
-        get_installed_scripts_map()[scriptname] = script_to_install;
+        std::cout << "Installing " << script_name << "..." << std::endl;
+        Script script_to_install = get_available_scripts_map()[script_name];
+        get_installed_scripts_map()[script_name] = script_to_install;
+        std::cout << script_name << " installed." << std::endl;
         return 0;
     }
 
-    int uninstall(std::string scriptname) {
-        if (!get_installed_scripts_map().count(scriptname)) {
+    int uninstall(std::string script_name) {
+        if (!get_installed_scripts_map().count(script_name)) {
             std::cout << "Error: script is not installed!" << std::endl;
             return 1;
         }
-        std::cout << "Uninstalling " << scriptname << "..."  << std::endl;
-        get_installed_scripts_map().erase(scriptname);
-        std::cout << scriptname << "uninstalled."  << std::endl;
+        std::cout << "Uninstalling " << script_name << "..."  << std::endl;
+        get_installed_scripts_map().erase(script_name);
+        std::cout << script_name << "uninstalled."  << std::endl;
         return 0;
     }
 
-    int run(std::string scriptname) {
-        std::cout << "Searching for " << scriptname << "..."  << std::endl;
+    int run(std::string script_name) {
+        std::cout << "Searching for " << script_name << "..."  << std::endl;
         std::vector<std::string> command_set;
         bool script_found = false;
         for (Script script : database.available_scripts) {
-            if (script.name == scriptname) {
+            if (script.name == script_name) {
                 command_set = script.command_set;
                 script_found = true;
                 break;
@@ -124,15 +126,15 @@ public:
         }
         if (!script_found) {
             std::cout << "Error: no script exists with the name '"
-            << scriptname << "'" << std::endl;
+            << script_name << "'" << std::endl;
             return 1;
         }
 
-        std::cout << scriptname << " found, starting:" << std::endl;
+        std::cout << script_name << " found, starting:" << std::endl;
         for (std::string command : command_set) {
             std::cout << command << std::endl;
         };
-        std::cout << scriptname << "finished."  << std::endl;
+        std::cout << script_name << "finished."  << std::endl;
         return 0;
     }
 };

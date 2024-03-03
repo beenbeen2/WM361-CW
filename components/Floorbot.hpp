@@ -21,6 +21,7 @@ private:
 
 public:
     std::vector<Plugin> installed_plugins {};
+    std::vector<Plugin> enabled_plugins {};
 
     Floorbot() = default;
 

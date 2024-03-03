@@ -15,7 +15,7 @@ public:
     std::unordered_map<std::string, Flag> flag_map = {
         {"--restart", Flag::restart},
         {"--power_off", Flag::power_off},
-        {"--power_off", Flag::power_on},
+        {"--power_on", Flag::power_on},
         {"--factory_reset", Flag::factory_reset},
     };
 

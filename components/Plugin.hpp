@@ -5,6 +5,7 @@
 
 class Plugin {
 public:
+    Plugin() = default;
     Plugin(
         std::string name,
         bool enabled

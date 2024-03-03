@@ -8,6 +8,7 @@
 #include <sstream>
 #include <chrono>
 #include <fstream>
+#include <algorithm>
 
 #include "./components/Script.hpp"
 #include "./components/Plugin.hpp"
@@ -28,10 +29,9 @@ public:
     );
     std::vector<Script> available_scripts {shop_demo_script, snake_script};
 
-    Plugin eco_mode_plugin = Plugin("Eco Mode", true);
-    Plugin filter_warning_plugin = Plugin("Filter Warning", true);
-
-    std::vector<Plugin> available_plugins {eco_mode_plugin, filter_warning_plugin};
+    Plugin eco_mode_plugin = Plugin("Eco-Mode", true);
+    Plugin filter_warning_plugin = Plugin("Advanced-Filter-Warning", true);
+    std::vector<Plugin> available_plugins {&eco_mode_plugin, &filter_warning_plugin};
 
     Floorbot basic_fb1 = Floorbot(
         "Floorbot Mini Shop Demo 1",
