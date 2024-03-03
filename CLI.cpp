@@ -8,7 +8,7 @@
 #include "./components/Floorbot.hpp"
 #include "./components/Account.hpp"
 
-#include "CLICache.hpp"
+#include "CLICache.cpp"
 #include "Database.hpp"
 #include "Utils.hpp"
 

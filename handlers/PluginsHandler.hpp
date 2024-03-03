@@ -97,10 +97,10 @@ public:
     };
 
     int list() {
-        bool only_installed;
-        bool only_enabled;
+        bool only_installed = false;
+        bool only_enabled = false;
         if (get_installed_plugins_map().empty()) {
-            std::cout << "No plugins are installed! Showing all plugins available for download:" << std::endl;
+            std::cout << "No plugins are installed! Showing all plugins available for download." << std::endl << std::endl;
             only_installed = false;
             only_enabled = false;
         } else {
@@ -141,10 +141,10 @@ public:
             std::cout << "Error: plugin is already installed!" << std::endl;
             return 1;
         }
-        std::cout << "Installing " << plugin_name << "..." << std::endl;
+        std::cout << "Installing and enabling " << plugin_name << "..." << std::endl;
         Plugin plugin_to_install = *get_available_plugins_map()[plugin_name];
         current_floorbot->installed_plugins.push_back(plugin_to_install);
-        std::cout << plugin_name << " installed." << std::endl;
+        std::cout << plugin_name << " installed and enabled." << std::endl;
         return 0;
     }
 
@@ -165,7 +165,7 @@ public:
         } else {
             std::cout << "Error: plugin could not be located." << std::endl;
         }
-        std::cout << plugin_name << "uninstalled."  << std::endl;
+        std::cout << plugin_name << " uninstalled and disabled."  << std::endl;
         return 0;
     }
 

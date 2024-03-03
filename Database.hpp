@@ -19,7 +19,7 @@ class Database {
     // Dummy floorbots and accounts for demonstration purposes.
     // In reality, this would be a data layer interfacing with (potentially multiple)
     // databases, constructing and passing the requested objects on demand.
-private:
+public:
     AddOnsDatabase add_ons;
     std::vector<Plugin> plugins_copy;
 
@@ -66,7 +66,6 @@ private:
         plugins_copy
     );
 
-public:
     std::vector<std::shared_ptr<Floorbot>> basic_floorbots = { basic_fb1, basic_fb2, basic_fb3  };
     std::vector<std::shared_ptr<Floorbot>> admin_floorbots = { admin_fb1, admin_fb2, admin_fb3  };
     Account basic_account = Account("basic_user", false, basic_floorbots);

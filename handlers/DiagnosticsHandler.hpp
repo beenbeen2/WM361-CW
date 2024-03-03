@@ -72,7 +72,7 @@ public:
         //     std::cout << "Error: Unsupported file type, filename must end in '.txt'." << std::endl;
         //     return 1;
         // }
-        std::string file_path = ".\\saved_reports\\" + filename + file_extension;
+        std::string file_path = "..\\saved_reports\\" + filename + file_extension;
         std::ofstream DiagnosticReport(file_path);
 
         if (!DiagnosticReport.is_open()) {
