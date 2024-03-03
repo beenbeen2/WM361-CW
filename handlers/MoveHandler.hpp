@@ -19,7 +19,7 @@ public:
         {"--left", Flag::left},
     };
 
-    int parse_command(Floorbot floorbot, std::string flag_input, std::string arg_input) {
+    int parse_command(std::string flag_input, std::string arg_input) {
         if (!flag_map.count(flag_input)) {
             std::cout << "Error: invalid direction flag entered.";
             return 1;
@@ -34,28 +34,28 @@ public:
         int distance;
         try {
             distance = std::stoi(arg_input);
-        } catch (const std::invalid_argument& e) {
+        } catch (std::invalid_argument& error) {
             std::cout << "Error: the distance must be an integer.";
             return 1;
         }
 
         switch(direction) {
             case Flag::forward:
-                floorbot.move_forward(distance);
+                current_floorbot->move_forward(distance);
                 break;
             case Flag::back:
-                floorbot.move_back(distance);
+                current_floorbot->move_back(distance);
                 break;
             case Flag::left:
-                floorbot.move_left(distance);
+                current_floorbot->move_left(distance);
                 break;
             case Flag::right:
-                floorbot.move_right(distance);
+                current_floorbot->move_right(distance);
                 break;
         }
 
         std::cout << "Floorbot has moved " << distance << "cm to (" 
-            << floorbot.get_x_coord() << ", " << floorbot.get_y_coord() << ")." << std::endl;
+            << current_floorbot->get_x_coord() << ", " << current_floorbot->get_y_coord() << ")." << std::endl;
         return 0;
     }
 };

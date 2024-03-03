@@ -2,16 +2,18 @@
 #define SCRIPTSHANDLER
 
 #include "../CLICache.hpp"
+#include "../AddOnsDatabase.hpp"
 #include "../Database.hpp"
 #include "../Utils.hpp"
   
 class ScriptsHandler: virtual private CLICache {
 private:
+    AddOnsDatabase add_ons;
     Database database;
     Utils utils;
 
-    std::unordered_map<std::string, Script> installed_scripts_map;
-    std::unordered_map<std::string, Script> available_scripts_map;
+    std::unordered_map<std::string, std::shared_ptr<Script>> installed_scripts_map;
+    std::unordered_map<std::string, std::shared_ptr<Script>> available_scripts_map;
 
 public: 
     enum class Flag { list, install, uninstall, run };
@@ -22,20 +24,34 @@ public:
         {"--run", Flag::run},
     };
 
-    std::unordered_map<std::string, Script> get_available_scripts_map() {
-        for (Script script : database.available_scripts) {
-            available_scripts_map[script.name] = script;
+    std::vector<std::shared_ptr<Script>> get_available_scripts() {
+        std::vector<std::shared_ptr<Script>> available_scripts_refs;
+        for (Script script : add_ons.available_scripts) {
+            available_scripts_refs.push_back(std::make_shared<Script>(script));
+        }
+        return available_scripts_refs;
+    }
+    std::vector<std::shared_ptr<Script>> get_installed_scripts() {
+        std::vector<std::shared_ptr<Script>> installed_scripts_refs;
+        for (Script script : installed_scripts) {
+            installed_scripts_refs.push_back(std::make_shared<Script>(script));
+        }
+        return installed_scripts_refs;
+    }
+    std::unordered_map<std::string, std::shared_ptr<Script>> get_available_scripts_map() {
+        for (std::shared_ptr<Script> script : get_available_scripts()) {
+            available_scripts_map[script->name] = script;
         }
         return available_scripts_map;
     }
-    std::unordered_map<std::string, Script> get_installed_scripts_map() {
-        for (Script script : installed_scripts) {
-            installed_scripts_map[script.name] = script;
+    std::unordered_map<std::string, std::shared_ptr<Script>> get_installed_scripts_map() {
+        for (std::shared_ptr<Script> script : get_installed_scripts()) {
+            installed_scripts_map[script->name] = script;
         }
         return installed_scripts_map;
     }
 
-    int parse_command(Floorbot floorbot, std::string flag_input, std::string arg_input) {
+    int parse_command(std::string flag_input, std::string arg_input) {
         if (!flag_map.count(flag_input)) {
             std::cout << "Error: invalid flag entered." << std::endl;
             return 1;
@@ -69,18 +85,18 @@ public:
             std::cout << "List only installed scripts?" << std::endl;
             only_installed = utils.get_confirmation(false);
         };
-        std::vector<Script> scripts_to_display;
+        std::vector<std::shared_ptr<Script>> scripts_to_display;
         if (only_installed) {
             std::cout << std::endl << "Installed Scripts:" << std::endl;
-            scripts_to_display = installed_scripts;
+            scripts_to_display = get_installed_scripts();
         } else {
             std::cout << "Available Scripts:" << std::endl;
-            scripts_to_display = database.available_scripts;
+            scripts_to_display = get_available_scripts();
         }
 
         int i = 1;
-        for (Script script : scripts_to_display) {
-            std::cout << std::to_string(i) << ". " << script.name << std::endl;
+        for (std::shared_ptr<Script> script : scripts_to_display) {
+            std::cout << std::to_string(i) << ". " << script->name << std::endl;
             i++;
         }
         return 0;
@@ -96,8 +112,8 @@ public:
             return 1;
         }
         std::cout << "Installing " << script_name << "..." << std::endl;
-        Script script_to_install = get_available_scripts_map()[script_name];
-        get_installed_scripts_map()[script_name] = script_to_install;
+        Script script_to_install = *get_available_scripts_map()[script_name];
+        installed_scripts.push_back(script_to_install);
         std::cout << script_name << " installed." << std::endl;
         return 0;
     }
@@ -108,8 +124,18 @@ public:
             return 1;
         }
         std::cout << "Uninstalling " << script_name << "..."  << std::endl;
-        get_installed_scripts_map().erase(script_name);
-        std::cout << script_name << "uninstalled."  << std::endl;
+        Script script_to_uninstall = *get_available_scripts_map()[script_name];
+        std::vector<Script>::iterator script_position = std::find(
+            installed_scripts.begin(),
+            installed_scripts.end(),
+            script_to_uninstall
+        );
+        if (script_position != installed_scripts.end()) { 
+            installed_scripts.erase(script_position); 
+        } else {
+            std::cout << "Error: script could not be located." << std::endl;
+        }
+        std::cout << script_name << " uninstalled."  << std::endl;
         return 0;
     }
 
@@ -117,9 +143,9 @@ public:
         std::cout << "Searching for " << script_name << "..."  << std::endl;
         std::vector<std::string> command_set;
         bool script_found = false;
-        for (Script script : database.available_scripts) {
-            if (script.name == script_name) {
-                command_set = script.command_set;
+        for (std::shared_ptr<Script> script : get_available_scripts()) {
+            if (script->name == script_name) {
+                command_set = script->command_set;
                 script_found = true;
                 break;
             }
@@ -134,7 +160,7 @@ public:
         for (std::string command : command_set) {
             std::cout << command << std::endl;
         };
-        std::cout << script_name << "finished."  << std::endl;
+        std::cout << script_name << " finished."  << std::endl;
         return 0;
     }
 };

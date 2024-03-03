@@ -19,7 +19,7 @@ public:
         {"--factory_reset", Flag::factory_reset},
     };
 
-    int parse_command(Floorbot floorbot, std::string flag_input, std::string arg_input = "") {
+    int parse_command(std::string flag_input, std::string arg_input = "") {
         if (!flag_map.count(flag_input)) {
             std::cout << "Error: invalid flag entered.";
             return 1;
@@ -28,51 +28,51 @@ public:
         
         switch(flag) {
             case Flag::restart:
-                restart(floorbot);
+                restart();
                 break;
             case Flag::power_off:
-                power_off(floorbot);
+                power_off();
                 break;
             case Flag::power_on:
-                power_on(floorbot);
+                power_on();
                 break;
             case Flag::factory_reset:
-                factory_reset(floorbot);
+                factory_reset();
                 break;
         }
         return 0;
     };
 
-    int restart(Floorbot floorbot) {
-        std::cout << "Restarting " << floorbot.get_name() << "...";
-        floorbot.restart();
+    int restart() {
+        std::cout << "Restarting " << current_floorbot->get_name() << "...";
+        current_floorbot->restart();
         return 0;
     };
 
-    int power_off(Floorbot floorbot) {
-        std::cout << "Turning " << floorbot.get_name() << " off...";
-        floorbot.power_off();
+    int power_off() {
+        std::cout << "Turning " << current_floorbot->get_name() << " off...";
+        current_floorbot->power_off();
         // select another robot?
-        std::cout << floorbot.get_name() << " powered off." << std::endl;
+        std::cout << current_floorbot->get_name() << " powered off." << std::endl;
         return 0;
     };
 
-    int power_on(Floorbot floorbot) {
-        std::cout << "Turning " << floorbot.get_name() << " on..." << std::endl;
-        floorbot.power_on();
-        std::cout << floorbot.get_name() << " powered on." << std::endl;
+    int power_on() {
+        std::cout << "Turning " << current_floorbot->get_name() << " on..." << std::endl;
+        current_floorbot->power_on();
+        std::cout << current_floorbot->get_name() << " powered on." << std::endl;
         return 0;
     };
 
-    int factory_reset(Floorbot floorbot) {
+    int factory_reset() {
         std::cout 
             << "This will erase all installed updates and plugins from the floorbot, "
             << "are you sure you want to continue? ";
         if (utils.get_confirmation(false)) {
-            std::cout << "Factory resetting " << floorbot.get_name() << "..." << std::endl;
-            floorbot.factory_reset();
+            std::cout << "Factory resetting " << current_floorbot->get_name() << "..." << std::endl;
+            current_floorbot->factory_reset();
             // select another robot?
-            std::cout << floorbot.get_name() << " reset to factory conditions." << std::endl;
+            std::cout << current_floorbot->get_name() << " reset to factory conditions." << std::endl;
         } else {
             std::cout << "Factory reset cancelled." << std::endl;
         };

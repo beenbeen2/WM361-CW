@@ -10,7 +10,8 @@ class Floorbot {
 private:
     bool is_floorbot_on = 1;
 
-    std::string name, model, device_id, chipset, version;
+    std::string name, version;
+    const std::string model, device_id, chipset;
     int bin_capacity, battery_level, battery_health, filter_health, power_usage;
 
     int major_version = 2, minor_version = 1, patch = 0;
@@ -21,10 +22,8 @@ private:
 
 public:
     std::vector<Plugin> installed_plugins {};
-    std::vector<Plugin> enabled_plugins {};
 
     Floorbot() = default;
-
     Floorbot(
         std::string name,
         std::string model,
@@ -109,7 +108,7 @@ public:
         patch = 0;
         get_version();
 
-        installed_plugins = {};
+        installed_plugins.clear();
         restart();
         return 0;
     }

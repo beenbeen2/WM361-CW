@@ -17,6 +17,10 @@ public:
 
     std::string name;
     std::vector<std::string> command_set;
+
+    bool operator==(const Script& other_script) const {
+        return name == other_script.name;
+    }
 };
 
 #endif

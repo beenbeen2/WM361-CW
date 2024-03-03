@@ -3,6 +3,11 @@
 #include <vector>
 #include <unordered_map>
 
+#include "./components/Plugin.hpp"
+#include "./components/Script.hpp"
+#include "./components/Floorbot.hpp"
+#include "./components/Account.hpp"
+
 #include "CLICache.hpp"
 #include "Database.hpp"
 #include "Utils.hpp"
@@ -40,9 +45,9 @@ public:
         {"2", "Apple"},
         {"3", "Facebook"},
     };
-    std::unordered_map<std::string, Account> account_map = {
-        {"1", database.basic_account},
-        {"2", database.admin_account},
+    std::unordered_map<std::string, std::shared_ptr<Account>> account_map = {
+        {"1", std::make_shared<Account>(database.basic_account)},
+        {"2", std::make_shared<Account>(database.admin_account)},
     };
 
     int login() {
@@ -69,7 +74,8 @@ public:
 // Dummy login proccess for demonstration.
         std::string account_selection;
         while(!user_logged_in) {
-            std::cout << "(Login simulated for demonstration purposes, do you want to act as an admin/advanced user or a basic user:)" << std::endl
+            std::cout << "(Login simulated for demonstration purposes, "
+                << "do you want to act as an admin/advanced user or a basic user:)" << std::endl
                 << "[1] Basic User" << std::endl
                 << "[2] Admin/Advanced User" << std::endl;
             std::cin >> account_selection;
@@ -82,7 +88,7 @@ public:
             current_user = account_map[account_selection];
             user_logged_in = true;
         }
-        std::cout << "Welcome back, " << current_user.username << "!" << std::endl;
+        std::cout << "Welcome back, " << current_user->username << "!" << std::endl;
         return 0;
     };
 
@@ -91,19 +97,19 @@ public:
         while (!floorbot_selected) {
             std::cout << std::endl << "Please select a floorbot linked to your account to begin controlling:" << std::endl;
             int i = 1;
-            for (Floorbot linked_floorbot : current_user.linked_floorbots) {
-                std::cout << "[" << std::to_string(i) << "] " << linked_floorbot.get_name() << std::endl;
+            for (std::shared_ptr<Floorbot> linked_floorbot : current_user->linked_floorbots) {
+                std::cout << "[" << std::to_string(i) << "] " << linked_floorbot->get_name() << std::endl;
                 i++;
             }
             std::cin >> selected_floorbot_number;
-            if (selected_floorbot_number < 1 || selected_floorbot_number > current_user.linked_floorbots.size()) {
+            if (selected_floorbot_number < 1 || selected_floorbot_number > current_user->linked_floorbots.size()) {
                 std::cout << "Error: incorrect number selected, please enter a number between 1-3.\n\n";
             } else {
-                current_floorbot = current_user.linked_floorbots[selected_floorbot_number-1];
+                current_floorbot = current_user->linked_floorbots[selected_floorbot_number-1];
                 floorbot_selected = true;
             }
         }
-        std::cout << "You have selected " << current_floorbot.get_name() << " to control." << std::endl;
+        std::cout << "You have selected " << current_floorbot->get_name() << " to control." << std::endl;
         return 0;
     };
 
@@ -133,19 +139,19 @@ public:
         std::cout << std::endl;
         switch(command) {
             case Command::move: 
-                move.parse_command(current_floorbot, flag_input, arg_input);
+                move.parse_command(flag_input, arg_input);
                 break;
             case Command::diagnostics:
-                diagnostics.parse_command(current_floorbot, flag_input, arg_input);
+                diagnostics.parse_command(flag_input, arg_input);
                 break;
             case Command::plugins:
-                plugins.parse_command(current_floorbot, flag_input, arg_input);
+                plugins.parse_command(flag_input, arg_input);
                 break;
             case Command::scripts:
-                scripts.parse_command(current_floorbot, flag_input, arg_input);
+                scripts.parse_command(flag_input, arg_input);
                 break;
             case Command::control:
-                control.parse_command(current_floorbot, flag_input, arg_input);
+                control.parse_command(flag_input, arg_input);
                 break;
             case Command::help:
                 break;
@@ -162,13 +168,13 @@ public:
         parse_command(input);
         return 0;
     };
+
 };
 
 int main() {  
     CLI cli;
-    Utils utils;
     
-    std::cout << std::endl << "Welcome to the Floorbot CLI!" << std::endl;
+    std::cout << std::endl << "Welcome to the Floorbot Commander CLI!" << std::endl;
 
     cli.login();
     if (!cli.user_logged_in) {

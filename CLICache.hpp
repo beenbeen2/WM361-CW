@@ -8,21 +8,22 @@
 
 // In reality, scripts would be installed via the ScriptHandler and copied to the CLI Cache/local storage.
 // However, for demonstration purposes they are simply composed directly from the Database class.
+#include "AddOnsDatabase.hpp"
 #include "Database.hpp"
 
 class CLICache {
 private:
+    AddOnsDatabase add_ons;
     Database database;
 
+    
 public:
     bool user_logged_in = false;
-    Account current_user;
+    std::shared_ptr<Account> current_user;
     bool floorbot_selected = false;
-    Floorbot current_floorbot;
-    std::vector<Script> installed_scripts {
-        database.shop_demo_script,
-        database.snake_script
-    };
+    std::shared_ptr<Floorbot> current_floorbot = database.;
+    // "Pre-installing" all available scripts:
+    std::vector<Script> installed_scripts = add_ons.available_scripts;
 };
 
 #endif

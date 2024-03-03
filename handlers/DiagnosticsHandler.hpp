@@ -9,61 +9,61 @@ class DiagnosticsHandler: virtual private CLICache {
 private:
     Database database;
     Utils utils;
-    std::string file_extension = ".txt";
-
-public:
+    const std::string file_extension = ".txt";
     enum class Flag { print, save, submit };
-    std::unordered_map<std::string, Flag> flag_map = {
+    const std::unordered_map<std::string, const Flag> flag_map = {
         {"--print", Flag::print},
         {"--save", Flag::save},
         {"--submit", Flag::submit},
     };
 
-    int parse_command(Floorbot floorbot, std::string flag_input, std::string arg_input = "") {
+public:
+    int parse_command(std::string flag_input, std::string arg_input = "") {
         if (!flag_map.count(flag_input)) {
             std::cout << "Error: invalid direction flag entered.";
             return 1;
         }
-        Flag flag = flag_map[flag_input];
+        Flag flag = flag_map.at(flag_input);
 
+        std::string file_name = arg_input;
         switch(flag) {
             case Flag::print:
-                print(floorbot);
+                print();
                 break;
             case Flag::save:
                 if (arg_input.empty()) {
                     std::cout << "Error: Please provide a filename to save the diagnostic report to." << std::endl;
                     return 1;
                 }
-                save(floorbot, arg_input);
+                save(file_name);
                 break;
             case Flag::submit:
-                submit(floorbot);
+                submit();
                 break;
         }
         return 0;
     }
 
-    int print(Floorbot floorbot) {
-        std::chrono::_V2::system_clock::duration runtime = floorbot.get_runtime();
+    int print() {
+        std::chrono::_V2::system_clock::duration runtime = current_floorbot->get_runtime();
 
         std::cout << std::endl << "DIAGNOSTIC REPORT" << std::endl;
-        std::cout << "Name: '" << floorbot.get_name() << "'" << std::endl;
-        std::cout << "Model " << floorbot.get_model() << std::endl;
-        std::cout << "ID: " << floorbot.get_device_id() << std::endl;
-        std::cout << "Chipset: " << floorbot.get_chipset() << std::endl;
+        std::cout << "Name: '" << current_floorbot->get_name() << "'" << std::endl;
+        std::cout << "Model " << current_floorbot->get_model() << std::endl;
+        std::cout << "ID: " << current_floorbot->get_device_id() << std::endl;
+        std::cout << "Chipset: " << current_floorbot->get_chipset() << std::endl;
         std::cout << "Session Runtime: " << runtime.count() << "ns" << std::endl;
-        std::cout << "Firmware Version: " << floorbot.get_version() << "" << std::endl;
-        std::cout << "Bin capacity: " << floorbot.get_bin_capacity() << "%" << std::endl;
-        std::cout << "Battery: " << floorbot.get_battery_level() << "%" << std::endl;
-        std::cout << "Battery health: " << floorbot.get_battery_health() << "%" << std::endl;
-        std::cout << "Filter health: " << floorbot.get_filter_health() << "%" << std::endl;
-        std::cout << "Power Usage: " << floorbot.get_power_usage() << "W" << std::endl;
+        std::cout << "Firmware Version: " << current_floorbot->get_version() << "" << std::endl;
+        std::cout << "Bin capacity: " << current_floorbot->get_bin_capacity() << "%" << std::endl;
+        std::cout << "Battery: " << current_floorbot->get_battery_level() << "%" << std::endl;
+        std::cout << "Battery health: " << current_floorbot->get_battery_health() << "%" << std::endl;
+        std::cout << "Filter health: " << current_floorbot->get_filter_health() << "%" << std::endl;
+        std::cout << "Power Usage: " << current_floorbot->get_power_usage() << "W" << std::endl;
         std::cout << std::endl;
         return 0;
     }
 
-    int save(Floorbot floorbot, std::string filename) {
+    int save(std::string filename) {
         // if ((filename.length() < file_extension.length()) {
         //     std::cout << "Error: file name must include a support type extension, such as '.txt'." << std::endl;
         //     return 1;
@@ -80,30 +80,30 @@ public:
             return 1;
         }
 
-        std::chrono::_V2::system_clock::duration runtime = floorbot.get_runtime();
+        std::chrono::_V2::system_clock::duration runtime = current_floorbot->get_runtime();
         DiagnosticReport << std::endl << "DIAGNOSTIC REPORT" << std::endl;
-        DiagnosticReport << "Name: '" << floorbot.get_name() << "'" << std::endl;
-        DiagnosticReport << "Model " << floorbot.get_model() << std::endl;
-        DiagnosticReport << "ID: " << floorbot.get_device_id() << std::endl;
-        DiagnosticReport << "Chipset: " << floorbot.get_chipset() << std::endl;
+        DiagnosticReport << "Name: '" << current_floorbot->get_name() << "'" << std::endl;
+        DiagnosticReport << "Model " << current_floorbot->get_model() << std::endl;
+        DiagnosticReport << "ID: " << current_floorbot->get_device_id() << std::endl;
+        DiagnosticReport << "Chipset: " << current_floorbot->get_chipset() << std::endl;
         DiagnosticReport << "Session Runtime: " << runtime.count() << "ns" << std::endl;
-        DiagnosticReport << "Firmware Version: " << floorbot.get_version() << "" << std::endl;
-        DiagnosticReport << "Bin capacity: " << floorbot.get_bin_capacity() << "%" << std::endl;
-        DiagnosticReport << "Battery: " << floorbot.get_battery_level() << "%" << std::endl;
-        DiagnosticReport << "Battery health: " << floorbot.get_battery_health() << "%" << std::endl;
-        DiagnosticReport << "Filter health: " << floorbot.get_filter_health() << "%" << std::endl;
-        DiagnosticReport << "Power Usage: " << floorbot.get_power_usage() << "W" << std::endl;
+        DiagnosticReport << "Firmware Version: " << current_floorbot->get_version() << "" << std::endl;
+        DiagnosticReport << "Bin capacity: " << current_floorbot->get_bin_capacity() << "%" << std::endl;
+        DiagnosticReport << "Battery: " << current_floorbot->get_battery_level() << "%" << std::endl;
+        DiagnosticReport << "Battery health: " << current_floorbot->get_battery_health() << "%" << std::endl;
+        DiagnosticReport << "Filter health: " << current_floorbot->get_filter_health() << "%" << std::endl;
+        DiagnosticReport << "Power Usage: " << current_floorbot->get_power_usage() << "W" << std::endl;
 
         DiagnosticReport.close();
         std::cout 
-            << "Diagnostic report for " << floorbot.get_name() 
+            << "Diagnostic report for " << current_floorbot->get_name() 
             << " has successfully been saved to " << file_path << std::endl;
         return 0;
     }
 
-    int submit(Floorbot floorbot) {
+    int submit() {
         std::cout 
-            << "Diagnostic report for " << floorbot.get_name() 
+            << "Diagnostic report for " << current_floorbot->get_name() 
             << " has successfully been submitted to Floorbot customer support." << std::endl;
         return 0;
     }

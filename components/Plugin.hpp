@@ -16,6 +16,10 @@ public:
     
     std::string name;
     bool enabled;
+
+    bool operator==(const Plugin& other_plugin) const {
+        return name == other_plugin.name;
+    }
 };
 
 #endif
