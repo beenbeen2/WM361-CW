@@ -6,6 +6,7 @@
 
 class Script {
 public:
+    Script() = default;
     Script(
         std::string name,
         std::vector<std::string> command_set

@@ -18,7 +18,7 @@ class Database {
     // Dummy plugins and scripts
 public:
     Script shop_demo_script = Script(
-        "shop demo 1",
+        "shop-demo-1",
         {"move --forward 5", "move --right 5", "move --back 5", "move --left 5"}
     );
 
