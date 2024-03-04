@@ -21,13 +21,13 @@ public:
 
     int parse_command(std::string flag_input, std::string arg_input) {
         if (!flag_map.count(flag_input)) {
-            std::cout << "Error: invalid direction flag entered.";
+            std::cout << "Error: invalid direction flag entered." << std::endl << std::endl;
             return 1;
         }
         Flag direction = flag_map[flag_input];
 
         if (arg_input.empty()) {
-            std::cout << "Error: please enter a distance value.";
+            std::cout << "Error: please enter a distance value." << std::endl << std::endl;
             return 1;
         }
 
@@ -35,7 +35,7 @@ public:
         try {
             distance = std::stoi(arg_input);
         } catch (std::invalid_argument& error) {
-            std::cout << "Error: the distance must be an integer.";
+            std::cout << "Error: the distance must be an integer." << std::endl << std::endl;
             return 1;
         }
 
@@ -55,7 +55,7 @@ public:
         }
 
         std::cout << "Floorbot has moved " << distance << "cm to (" 
-            << current_floorbot->get_x_coord() << ", " << current_floorbot->get_y_coord() << ")." << std::endl;
+            << current_floorbot->get_x_coord() << ", " << current_floorbot->get_y_coord() << ")." << std::endl << std::endl;
         return 0;
     }
 };

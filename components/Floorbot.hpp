@@ -8,8 +8,6 @@
 
 class Floorbot {
 private:
-    bool is_floorbot_on = 1;
-
     std::string name, version;
     const std::string model, device_id, chipset;
     int bin_capacity, battery_level, battery_health, filter_health, power_usage;
@@ -21,6 +19,7 @@ private:
     std::chrono::system_clock::duration runtime;
 
 public:
+    bool powered_on = true;
     std::vector<Plugin> installed_plugins {};
 
     Floorbot() = default;
@@ -88,12 +87,12 @@ public:
     }
 
     int power_on() {
-        is_floorbot_on = 1;
+        powered_on = true;
         start_time = std::chrono::system_clock::now();
         return 0;
     }
     int power_off() { 
-        is_floorbot_on = 0;
+        powered_on = true;
         power_on();
         return 0;
     }

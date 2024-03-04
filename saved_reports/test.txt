@@ -1,0 +1,13 @@
+
+DIAGNOSTIC REPORT
+Name: 'RDD Floorbot Pro No.32'
+Model Floorbot Pro 9000
+ID: P3N9X4K7D2W6
+Chipset: X9000
+Session Runtime: 1709510955569214600ns
+Firmware Version: 2.1.0
+Bin capacity: 48%
+Battery: 45%
+Battery health: 63%
+Filter health: 58%
+Power Usage: 37W

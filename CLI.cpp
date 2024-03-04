@@ -81,14 +81,14 @@ public:
             std::cin >> account_selection;
 
             if (!account_map.count(account_selection)) {
-                std::cout << "Error: incorrect number selected, please enter a number between 1-2.\n\n";
+                std::cout << "Error: incorrect number selected, please enter a number between 1-2.\n\n" << std::endl << std::endl;
                 continue;
             }
 
             current_user = account_map[account_selection];
             user_logged_in = true;
         }
-        std::cout << "Welcome back, " << current_user->username << "!" << std::endl;
+        std::cout << std::endl << "Welcome back, " << current_user->username << "!" << std::endl;
         return 0;
     };
 
@@ -109,7 +109,7 @@ public:
                 floorbot_selected = true;
             }
         }
-        std::cout << "You have selected " << current_floorbot->get_name() << " to control." << std::endl;
+        std::cout << std::endl << "You have selected " << current_floorbot->get_name() << " to control." << std::endl << std::endl;
         return 0;
     };
 
@@ -119,7 +119,7 @@ public:
         std::string arg_input;
 
         if (input.empty()) {
-            std::cout << "Error: please enter a command.";
+            std::cout << "Error: please enter a command" << std::endl << std::endl;
         };
 
         std::vector<std::string> input_list = utils.split_command(input);
@@ -127,11 +127,11 @@ public:
         if (input_list.size() > 1) { flag_input = input_list[1]; };
         if (input_list.size() > 2) { arg_input = input_list[2]; };
         if (input_list.size() >= 4) {
-            std::cout << "Error: too many parameters enter, at most a command, flag, and argument should be entered.";
+            std::cout << "Error: too many parameters enter, at most a command, flag, and argument should be entered" << std::endl << std::endl;
             return 1;
         };
         if (!command_map.count(command_input)) {
-            std::cout << "Error: invalid command entered.";
+            std::cout << "Error: invalid command entered." << std::endl << std::endl;
             return 1;
         }
         Command command = command_map[command_input];
@@ -156,7 +156,7 @@ public:
             case Command::help:
                 break;
             case Command::exit:
-                std::cout << "Exiting Floorbot CLI." << std::endl;
+                std::cout << "Exiting Floorbot CLI." << std::endl << std::endl;
                 exit(0);
         };
 
@@ -178,12 +178,13 @@ int main() {
 
     cli.login();
     if (!cli.user_logged_in) {
-        std::cout << "Error: CLI has not logged in correctly, exiting.";
+        std::cout << "Error: CLI has not logged in correctly, please try restarting the CLI." << std::endl << std::endl;
         return 1;
     }
     cli.select_robot();
     if (!cli.floorbot_selected) {
-        std::cout << "Error: CLI has not selected a floorbot correctly, exiting.";
+        std::cout << "Error: CLI has not selected a floorbot correctly," 
+            << "please try restarting the CLI and/or selecting a different robot" << std::endl << std::endl;
         return 1;
     }
 

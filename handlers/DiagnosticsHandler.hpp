@@ -20,7 +20,7 @@ private:
 public:
     int parse_command(std::string flag_input, std::string arg_input = "") {
         if (!flag_map.count(flag_input)) {
-            std::cout << "Error: invalid direction flag entered.";
+            std::cout << "Error: invalid flag entered." << std::endl << std::endl;
             return 1;
         }
         Flag flag = flag_map.at(flag_input);
@@ -32,7 +32,7 @@ public:
                 break;
             case Flag::save:
                 if (arg_input.empty()) {
-                    std::cout << "Error: Please provide a filename to save the diagnostic report to." << std::endl;
+                    std::cout << "Error: Please provide a filename to save the diagnostic report to." << std::endl << std::endl;
                     return 1;
                 }
                 save(file_name);
@@ -72,11 +72,11 @@ public:
         //     std::cout << "Error: Unsupported file type, filename must end in '.txt'." << std::endl;
         //     return 1;
         // }
-        std::string file_path = "..\\saved_reports\\" + filename + file_extension;
+        std::string file_path = "saved_reports\\" + filename + file_extension;
         std::ofstream DiagnosticReport(file_path);
 
         if (!DiagnosticReport.is_open()) {
-            std::cout << "Error: Failed to open file for writing, check the filename entered is valid." << std::endl;
+            std::cout << "Error: Failed to open file for writing, check the filename entered is valid." << std::endl << std::endl;
             return 1;
         }
 
@@ -96,15 +96,15 @@ public:
 
         DiagnosticReport.close();
         std::cout 
-            << "Diagnostic report for " << current_floorbot->get_name() 
-            << " has successfully been saved to " << file_path << std::endl;
+            << "The diagnostic report for " << current_floorbot->get_name() 
+            << " has successfully been saved to " << file_path << std::endl << std::endl;
         return 0;
     }
 
     int submit() {
         std::cout 
-            << "Diagnostic report for " << current_floorbot->get_name() 
-            << " has successfully been submitted to Floorbot customer support." << std::endl;
+            << "The diagnostic report for " << current_floorbot->get_name() 
+            << " has successfully been submitted to Floorbot customer support." << std::endl << std::endl;
         return 0;
     }
 };

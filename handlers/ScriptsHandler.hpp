@@ -39,12 +39,14 @@ public:
         return installed_scripts_refs;
     }
     std::unordered_map<std::string, std::shared_ptr<Script>> get_available_scripts_map() {
+        available_scripts_map.clear();
         for (std::shared_ptr<Script> script : get_available_scripts()) {
             available_scripts_map[script->name] = script;
         }
         return available_scripts_map;
     }
     std::unordered_map<std::string, std::shared_ptr<Script>> get_installed_scripts_map() {
+        installed_scripts_map.clear();
         for (std::shared_ptr<Script> script : get_installed_scripts()) {
             installed_scripts_map[script->name] = script;
         }
@@ -53,7 +55,7 @@ public:
 
     int parse_command(std::string flag_input, std::string arg_input) {
         if (!flag_map.count(flag_input)) {
-            std::cout << "Error: invalid flag entered." << std::endl;
+            std::cout << "Error: invalid flag entered." << std::endl << std::endl;
             return 1;
         }
         Flag flag = flag_map[flag_input];
@@ -99,28 +101,29 @@ public:
             std::cout << std::to_string(i) << ". " << script->name << std::endl;
             i++;
         }
+        std::cout << std::endl;
         return 0;
     }
     
     int install(std::string script_name) {
         if (!get_available_scripts_map().count(script_name)) {
-            std::cout << "Error: script could not be located, is the script name correct?" << std::endl;
+            std::cout << "Error: script could not be located, is the script name correct?" << std::endl << std::endl;
             return 1;
         }
         if (get_installed_scripts_map().count(script_name)) {
-            std::cout << "Error: script is already installed!" << std::endl;
+            std::cout << "Error: script is already installed!" << std::endl << std::endl;
             return 1;
         }
         std::cout << "Installing " << script_name << "..." << std::endl;
         Script script_to_install = *get_available_scripts_map()[script_name];
         installed_scripts.push_back(script_to_install);
-        std::cout << script_name << " installed." << std::endl;
+        std::cout << script_name << " installed." << std::endl << std::endl;
         return 0;
     }
 
     int uninstall(std::string script_name) {
         if (!get_installed_scripts_map().count(script_name)) {
-            std::cout << "Error: script is not installed!" << std::endl;
+            std::cout << "Error: script is not installed!" << std::endl << std::endl;
             return 1;
         }
         std::cout << "Uninstalling " << script_name << "..."  << std::endl;
@@ -130,20 +133,24 @@ public:
             installed_scripts.end(),
             script_to_uninstall
         );
-        if (script_position != installed_scripts.end()) { 
-            installed_scripts.erase(script_position); 
-        } else {
-            std::cout << "Error: script could not be located." << std::endl;
+        if (script_position == installed_scripts.end()) { 
+            std::cout << "Error: script could not be located." << std::endl << std::endl;
+            return 1;
         }
-        std::cout << script_name << " uninstalled."  << std::endl;
+        installed_scripts.erase(script_position); 
+        std::cout << script_name << " uninstalled."  << std::endl << std::endl;
         return 0;
     }
 
     int run(std::string script_name) {
         std::cout << "Searching for " << script_name << "..."  << std::endl;
+        if (!get_installed_scripts_map().count(script_name)) {
+            std::cout << "Error: script is not installed, is it spelt correctly?" << std::endl << std::endl;
+            return 1;
+        }
         std::vector<std::string> command_set;
         bool script_found = false;
-        for (std::shared_ptr<Script> script : get_available_scripts()) {
+        for (std::shared_ptr<Script> script : get_installed_scripts()) {
             if (script->name == script_name) {
                 command_set = script->command_set;
                 script_found = true;
@@ -152,15 +159,16 @@ public:
         }
         if (!script_found) {
             std::cout << "Error: no script exists with the name '"
-            << script_name << "'" << std::endl;
+            << script_name << "', is" << std::endl  << std::endl;
             return 1;
         }
 
-        std::cout << script_name << " found, starting:" << std::endl;
+        std::cout << script_name << " found, starting script:" << std::endl << std::endl;
         for (std::string command : command_set) {
             std::cout << command << std::endl;
         };
-        std::cout << script_name << " finished."  << std::endl;
+        std::cout << std::endl;
+        std::cout << script_name << " finished."  << std::endl << std::endl;
         return 0;
     }
 };

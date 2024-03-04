@@ -50,18 +50,21 @@ public:
         return enabled_plugins_refs;
     }
     std::unordered_map<std::string, std::shared_ptr<Plugin>> get_available_plugins_map() {
+        available_plugins_map.clear();
         for (std::shared_ptr<Plugin> plugin : get_available_plugins()) {
             available_plugins_map[plugin->name] = plugin;
         }
         return available_plugins_map;
     }
     std::unordered_map<std::string, std::shared_ptr<Plugin>> get_installed_plugins_map() {
+        installed_plugins_map.clear();
         for (std::shared_ptr<Plugin> plugin : get_installed_plugins()) {
             installed_plugins_map[plugin->name] = plugin;
         }
         return installed_plugins_map;
     }
     std::unordered_map<std::string, std::shared_ptr<Plugin>> get_enabled_plugins_map() {
+        enabled_plugins_map.clear();
         for (std::shared_ptr<Plugin> plugin : get_enabled_plugins()) {
             enabled_plugins_map[plugin->name] = plugin;
         }
@@ -70,7 +73,7 @@ public:
 
     int parse_command(std::string flag_input, std::string arg_input = "") {
         if (!flag_map.count(flag_input)) {
-            std::cout << "Error: invalid flag entered.";
+            std::cout << "Error: invalid flag entered."  << std::endl << std::endl;
             return 1;
         }
         Flag flag = flag_map[flag_input];
@@ -134,23 +137,23 @@ public:
 
     int install(std::string plugin_name) {
         if (!get_available_plugins_map().count(plugin_name)) {
-            std::cout << "Error: plugin could not be located, is the plugin name correct?" << std::endl;
+            std::cout << "Error: plugin could not be located, is the plugin name correct?" << std::endl << std::endl;
             return 1;
         }
         if (get_installed_plugins_map().count(plugin_name)) {
-            std::cout << "Error: plugin is already installed!" << std::endl;
+            std::cout << "Error: plugin is already installed!" << std::endl << std::endl;
             return 1;
         }
         std::cout << "Installing and enabling " << plugin_name << "..." << std::endl;
         Plugin plugin_to_install = *get_available_plugins_map()[plugin_name];
         current_floorbot->installed_plugins.push_back(plugin_to_install);
-        std::cout << plugin_name << " installed and enabled." << std::endl;
+        std::cout << plugin_name << " installed and enabled." << std::endl << std::endl;
         return 0;
     }
 
     int uninstall(std::string plugin_name) {
         if (!get_installed_plugins_map().count(plugin_name)) {
-            std::cout << "Error: plugin is not installed!" << std::endl;
+            std::cout << "Error: plugin is not installed!" << std::endl << std::endl;
             return 1;
         }
         std::cout << "Uninstalling " << plugin_name << "..."  << std::endl;
@@ -163,9 +166,9 @@ public:
         if (plugin_position != current_floorbot->installed_plugins.end()) { 
             current_floorbot->installed_plugins.erase(plugin_position); 
         } else {
-            std::cout << "Error: plugin could not be located." << std::endl;
+            std::cout << "Error: plugin could not be located." << std::endl << std::endl;
         }
-        std::cout << plugin_name << " uninstalled and disabled."  << std::endl;
+        std::cout << plugin_name << " uninstalled and disabled."  << std::endl << std::endl;
         return 0;
     }
 
@@ -181,23 +184,23 @@ public:
         std::cout << "Enabling " << plugin_name << "..."  << std::endl;
         Plugin plugin_to_enable = *get_available_plugins_map()[plugin_name];
         plugin_to_enable.enabled = true;
-        std::cout << plugin_name << "enabled."  << std::endl;
+        std::cout << plugin_name << " enabled."  << std::endl  << std::endl;
         return 0;
     }
 
     int disable(std::string plugin_name) {
         if (!get_installed_plugins_map().count(plugin_name)) {
-            std::cout << "Error: plugin is not installed!" << std::endl;
+            std::cout << "Error: plugin is not installed!" << std::endl << std::endl;
             return 1;
         }
         if (!get_enabled_plugins_map().count(plugin_name)) {
-            std::cout << "Error: plugin is already disabled!" << std::endl;
+            std::cout << "Error: plugin is already disabled!" << std::endl << std::endl;
             return 1;
         }
         std::cout << "Disabling " << plugin_name << "..."  << std::endl;
         Plugin plugin_to_disable = *get_available_plugins_map()[plugin_name];
         plugin_to_disable.enabled = false;
-        std::cout << plugin_name << "enabled."  << std::endl;
+        std::cout << plugin_name << "enabled."  << std::endl << std::endl;
         return 0;
     }
 

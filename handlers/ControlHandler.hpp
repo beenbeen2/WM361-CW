@@ -21,7 +21,7 @@ public:
 
     int parse_command(std::string flag_input, std::string arg_input = "") {
         if (!flag_map.count(flag_input)) {
-            std::cout << "Error: invalid flag entered.";
+            std::cout << "Error: invalid flag entered." << std::endl << std::endl;
             return 1;
         }
         Flag flag = flag_map[flag_input];
@@ -46,21 +46,30 @@ public:
     int restart() {
         std::cout << "Restarting " << current_floorbot->get_name() << "...";
         current_floorbot->restart();
+        std::cout << current_floorbot->get_name() << " restarted successfully." << std::endl << std::endl;
         return 0;
     };
 
     int power_off() {
-        std::cout << "Turning " << current_floorbot->get_name() << " off...";
+        if (!current_floorbot->powered_on) {
+            std::cout << "Error: " << current_floorbot->get_name() << " is already off!" << std::endl << std::endl;
+            return 1;
+        }
+        std::cout << "Turning " << current_floorbot->get_name() << " off..." << std::endl;
         current_floorbot->power_off();
         // select another robot?
-        std::cout << current_floorbot->get_name() << " powered off." << std::endl;
+        std::cout << current_floorbot->get_name() << " powered off." << std::endl << std::endl;
         return 0;
     };
 
     int power_on() {
+        if (current_floorbot->powered_on) {
+            std::cout << "Error: " << current_floorbot->get_name() << " is already on!" << std::endl << std::endl;
+            return 1;
+        }
         std::cout << "Turning " << current_floorbot->get_name() << " on..." << std::endl;
         current_floorbot->power_on();
-        std::cout << current_floorbot->get_name() << " powered on." << std::endl;
+        std::cout << current_floorbot->get_name() << " powered on." << std::endl << std::endl;
         return 0;
     };
 
@@ -72,9 +81,9 @@ public:
             std::cout << "Factory resetting " << current_floorbot->get_name() << "..." << std::endl;
             current_floorbot->factory_reset();
             // select another robot?
-            std::cout << current_floorbot->get_name() << " reset to factory conditions." << std::endl;
+            std::cout << current_floorbot->get_name() << " reset to factory conditions." << std::endl << std::endl;
         } else {
-            std::cout << "Factory reset cancelled." << std::endl;
+            std::cout << "Factory reset cancelled." << std::endl << std::endl;
         };
         return 0;
     };
