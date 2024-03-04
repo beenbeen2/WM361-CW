@@ -11,12 +11,13 @@ private:
     Utils utils;
 
 public:
-    enum class Flag { restart, power_off, power_on, factory_reset };
+    enum class Flag { restart, power_off, power_on, factory_reset, help };
     std::unordered_map<std::string, Flag> flag_map = {
         {"--restart", Flag::restart},
         {"--power_off", Flag::power_off},
         {"--power_on", Flag::power_on},
         {"--factory_reset", Flag::factory_reset},
+        {"--help", Flag::help},
     };
 
     int parse_command(std::string flag_input, std::string arg_input = "") {
@@ -38,6 +39,9 @@ public:
                 break;
             case Flag::factory_reset:
                 factory_reset();
+                break;
+            case Flag::help:
+                help();
                 break;
         }
         return 0;
@@ -87,6 +91,16 @@ public:
         };
         return 0;
     };
+
+    void help() {
+        std::cout << std::endl << "Available commands:" << std::endl;
+        std::cout << "control" << std::endl
+                  << "    --restart" << std::endl
+                  << "    --power_off" << std::endl
+                  << "    --power_on" << std::endl
+                  << "    --factory_reset" << std::endl
+                  << "    --help (display this message)" << std::endl << std::endl;
+    }
 };
 
 #endif

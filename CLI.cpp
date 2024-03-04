@@ -148,12 +148,18 @@ public:
                 plugins.parse_command(flag_input, arg_input);
                 break;
             case Command::scripts:
+                if (!current_user->is_admin) {
+                    std::cout << "Warning: Scripts may damage your floorbot and are restricted to admin users only." 
+                    << std::endl << std::endl;
+                    return 0;
+                }
                 scripts.parse_command(flag_input, arg_input);
                 break;
             case Command::control:
                 control.parse_command(flag_input, arg_input);
                 break;
             case Command::help:
+                help();
                 break;
             case Command::exit:
                 std::cout << "Exiting Floorbot CLI." << std::endl << std::endl;
@@ -169,6 +175,16 @@ public:
         return 0;
     };
 
+    void help() {
+        utils.general_help();
+        utils.move_help();
+        utils.diagnostics_help();
+        utils.plugins_help();
+        if (current_user->is_admin) {
+            utils.scripts_help();
+        }
+        utils.control_help();
+    }
 };
 
 int main() {  

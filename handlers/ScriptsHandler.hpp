@@ -16,12 +16,13 @@ private:
     std::unordered_map<std::string, std::shared_ptr<Script>> available_scripts_map;
 
 public: 
-    enum class Flag { list, install, uninstall, run };
+    enum class Flag { list, install, uninstall, run, help };
     std::unordered_map<std::string, Flag> flag_map = {
         {"--list", Flag::list},
         {"--install", Flag::install},
         {"--uninstall", Flag::uninstall},
         {"--run", Flag::run},
+        {"--help", Flag::help},
     };
 
     std::vector<std::shared_ptr<Script>> get_available_scripts() {
@@ -73,6 +74,9 @@ public:
                 break;
             case Flag::run:
                 run(scriptname);
+                break;
+            case Flag::help:
+                help();
                 break;
         }
         return 0;
@@ -170,6 +174,16 @@ public:
         std::cout << std::endl;
         std::cout << script_name << " finished."  << std::endl << std::endl;
         return 0;
+    }
+
+    void help() {
+        std::cout << std::endl << "Available commands:" << std::endl;
+        std::cout << "scripts"  << std::endl
+                  << "    --list" << std::endl
+                  << "    --install <script-name>" << std::endl
+                  << "    --uninstall <script-name>" << std::endl
+                  << "    --run <script-name>" << std::endl
+                  << "    --help (display this message)" << std::endl << std::endl;
     }
 };
 

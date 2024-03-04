@@ -17,13 +17,14 @@ private:
     std::unordered_map<std::string, std::shared_ptr<Plugin>> enabled_plugins_map;
 
 public:
-    enum class Flag { list, install, uninstall, enable, disable };
+    enum class Flag { list, install, uninstall, enable, disable, help };
     std::unordered_map<std::string, Flag> flag_map = {
         {"--list", Flag::list},
         {"--install", Flag::install},
         {"--uninstall", Flag::uninstall},
         {"--enable", Flag::enable},
         {"--disable", Flag::disable},
+        {"--help", Flag::help},
     };
 
     std::vector<std::shared_ptr<Plugin>> get_available_plugins() {
@@ -94,6 +95,9 @@ public:
                 break;
             case Flag::disable:
                 disable(plugin_name);
+                break;
+            case Flag::help:
+                help();
                 break;
         }
         return 0;
@@ -204,6 +208,16 @@ public:
         return 0;
     }
 
+    void help() {
+        std::cout << std::endl << "Available commands:" << std::endl;
+        std::cout << "plugins" << std::endl
+                  << "    --list" << std::endl
+                  << "    --install <plugin-name>" << std::endl
+                  << "    --uninstall <plugin-name>" << std::endl
+                  << "    --enable <plugin-name>" << std::endl
+                  << "    --disable <plugin-name>" << std::endl
+                  << "    --help (display this message)" << std::endl << std::endl;
+    }
 };
 
 #endif

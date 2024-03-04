@@ -10,11 +10,12 @@ private:
     Database database;
     Utils utils;
     const std::string file_extension = ".txt";
-    enum class Flag { print, save, submit };
+    enum class Flag { print, save, submit, help };
     const std::unordered_map<std::string, const Flag> flag_map = {
         {"--print", Flag::print},
         {"--save", Flag::save},
         {"--submit", Flag::submit},
+        {"--help", Flag::help},
     };
 
 public:
@@ -40,6 +41,9 @@ public:
             case Flag::submit:
                 submit();
                 break;
+            case Flag::help:
+                help();
+                break;
         }
         return 0;
     }
@@ -50,15 +54,17 @@ public:
         std::cout << std::endl << "DIAGNOSTIC REPORT" << std::endl;
         std::cout << "Name: '" << current_floorbot->get_name() << "'" << std::endl;
         std::cout << "Model " << current_floorbot->get_model() << std::endl;
-        std::cout << "ID: " << current_floorbot->get_device_id() << std::endl;
-        std::cout << "Chipset: " << current_floorbot->get_chipset() << std::endl;
-        std::cout << "Session Runtime: " << runtime.count() << "ns" << std::endl;
         std::cout << "Firmware Version: " << current_floorbot->get_version() << "" << std::endl;
+        if (current_user->is_admin) {
+            std::cout << "ID: " << current_floorbot->get_device_id() << std::endl;
+            std::cout << "Chipset: " << current_floorbot->get_chipset() << std::endl;
+            std::cout << "Session Runtime: " << runtime.count() << "ns" << std::endl;
+            std::cout << "Power Usage: " << current_floorbot->get_power_usage() << "W" << std::endl;
+            std::cout << "Battery health: " << current_floorbot->get_battery_health() << "%" << std::endl;
+        }
+        std::cout << "Battery level: " << current_floorbot->get_battery_level() << "%" << std::endl;
         std::cout << "Bin capacity: " << current_floorbot->get_bin_capacity() << "%" << std::endl;
-        std::cout << "Battery: " << current_floorbot->get_battery_level() << "%" << std::endl;
-        std::cout << "Battery health: " << current_floorbot->get_battery_health() << "%" << std::endl;
         std::cout << "Filter health: " << current_floorbot->get_filter_health() << "%" << std::endl;
-        std::cout << "Power Usage: " << current_floorbot->get_power_usage() << "W" << std::endl;
         std::cout << std::endl;
         return 0;
     }
@@ -84,15 +90,17 @@ public:
         DiagnosticReport << std::endl << "DIAGNOSTIC REPORT" << std::endl;
         DiagnosticReport << "Name: '" << current_floorbot->get_name() << "'" << std::endl;
         DiagnosticReport << "Model " << current_floorbot->get_model() << std::endl;
-        DiagnosticReport << "ID: " << current_floorbot->get_device_id() << std::endl;
-        DiagnosticReport << "Chipset: " << current_floorbot->get_chipset() << std::endl;
-        DiagnosticReport << "Session Runtime: " << runtime.count() << "ns" << std::endl;
         DiagnosticReport << "Firmware Version: " << current_floorbot->get_version() << "" << std::endl;
+        if (current_user->is_admin) {
+            DiagnosticReport << "ID: " << current_floorbot->get_device_id() << std::endl;
+            DiagnosticReport << "Chipset: " << current_floorbot->get_chipset() << std::endl;
+            DiagnosticReport << "Session Runtime: " << runtime.count() << "ns" << std::endl;
+            DiagnosticReport << "Power Usage: " << current_floorbot->get_power_usage() << "W" << std::endl;
+            DiagnosticReport << "Battery health: " << current_floorbot->get_battery_health() << "%" << std::endl;
+        }
+        DiagnosticReport << "Battery level: " << current_floorbot->get_battery_level() << "%" << std::endl;
         DiagnosticReport << "Bin capacity: " << current_floorbot->get_bin_capacity() << "%" << std::endl;
-        DiagnosticReport << "Battery: " << current_floorbot->get_battery_level() << "%" << std::endl;
-        DiagnosticReport << "Battery health: " << current_floorbot->get_battery_health() << "%" << std::endl;
         DiagnosticReport << "Filter health: " << current_floorbot->get_filter_health() << "%" << std::endl;
-        DiagnosticReport << "Power Usage: " << current_floorbot->get_power_usage() << "W" << std::endl;
 
         DiagnosticReport.close();
         std::cout 
@@ -106,6 +114,15 @@ public:
             << "The diagnostic report for " << current_floorbot->get_name() 
             << " has successfully been submitted to Floorbot customer support." << std::endl << std::endl;
         return 0;
+    }
+
+    void help() {
+        std::cout << std::endl << "Available commands:" << std::endl;
+        std::cout << "diagnostics" << std::endl
+                  << "    --print" << std::endl
+                  << "    --save <filename>" << std::endl
+                  << "    --submit" << std::endl
+                  << "    --help (display this message)" << std::endl << std::endl;
     }
 };
 
