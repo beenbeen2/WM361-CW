@@ -51,7 +51,7 @@ public:
         while (!valid_confirmation_entered) {
             std::getline(std::cin, input);
             if (!input.empty() && !bool_map.count(input)) {
-                std::cout << "Error: invalid yes/no entered, "
+                std::cerr << "Error: invalid yes/no entered, "
                 << "valid options look like '0', 'yes', 'true' etc." << std::endl;
             } else {
                 valid_confirmation_entered = true;

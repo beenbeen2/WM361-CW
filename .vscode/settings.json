@@ -60,5 +60,5 @@
         "set": "cpp",
         "list": "cpp"
     },
-    "C_Cpp.default.compilerPath": "C:\\msys64\\ucrt64\\bin\\gcc.exe"
+    "C_Cpp.default.compilerPath": "C:\\msys64\\ucrt64\\bin\\g++.exe"
 }

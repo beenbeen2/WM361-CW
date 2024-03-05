@@ -56,7 +56,7 @@ private:
         std::string arg_input;
 
         if (input.empty()) {
-            std::cout << "Error: please enter a command" << std::endl << std::endl;
+            std::cerr << "Error: please enter a command" << std::endl << std::endl;
         };
 
         std::vector<std::string> input_list = utils.split_command(input);
@@ -64,13 +64,13 @@ private:
         if (input_list.size() > 1) { flag_input = input_list[1]; };
         if (input_list.size() > 2) { arg_input = input_list[2]; };
         if (input_list.size() >= 4) {
-            std::cout << "Error: too many parameters enter, at most a command, flag, and argument should be entered" << std::endl << std::endl;
+            std::cerr << "Error: too many parameters enter, at most a command, flag, and argument should be entered" << std::endl << std::endl;
             return 1;
         };
         if (!command_map.count(command_input)) {
-            std::cout << "Error: invalid command entered." << std::endl << std::endl;
+            std::cerr << "Error: invalid command entered." << std::endl << std::endl;
             return 1;
-        }
+        }       
         Command command = command_map[command_input];
 
         std::cout << std::endl;
@@ -86,7 +86,7 @@ private:
                 break;
             case Command::scripts:
                 if (!current_user->is_admin) {
-                    std::cout << "Warning: Scripts may damage your floorbot and are restricted to admin users only." 
+                    std::cerr << "Error: Scripts may damage your floorbot and are restricted to admin users only." 
                     << std::endl << std::endl;
                     return 0;
                 }
@@ -113,6 +113,17 @@ private:
         return 0;
     };
 
+    int welcome() {
+        std::cout << "Welcome back to the...";
+        std::cout << R"(     
+  ___  _                 ___       _         ___                                    _                 ___  _     ___ 
+ | __|| | ___  ___  _ _ | _ ) ___ | |_      / __| ___  _ __   _ __   __ _  _ _   __| | ___  _ _      / __|| |   |_ _|
+ | _| | |/ _ \/ _ \| '_|| _ \/ _ \|  _|    | (__ / _ \| '  \ | '  \ / _` || ' \ / _` |/ -_)| '_|    | (__ | |__  | | 
+ |_|  |_|\___/\___/|_|  |___/\___/ \__|     \___|\___/|_|_|_||_|_|_|\__,_||_||_|\__,_|\___||_|       \___||____||___|                                                                                                       
+        )" << std::endl;
+        return 1;                                                                                                                                             
+    }
+
     int login() {
         bool login_service_selected = false;
         std::string login_service;
@@ -124,7 +135,7 @@ private:
             std::cin >> login_service;
 
             if (!login_service_map.count(login_service)) {
-                std::cout << "Error: incorrect number selected, please enter a number between 1-3.\n\n";
+                std::cerr << "Error: incorrect number selected, please enter a number between 1-3.\n\n";
                 continue;
             }
 
@@ -144,7 +155,7 @@ private:
             std::cin >> account_selection;
 
             if (!account_map.count(account_selection)) {
-                std::cout << "Error: incorrect number selected, please enter a number between 1-2.\n\n" << std::endl << std::endl;
+                std::cerr << "Error: incorrect number selected, please enter a number between 1-2.\n\n" << std::endl << std::endl;
                 continue;
             }
 
@@ -171,11 +182,11 @@ private:
             try {
                 selected_floorbot_number = std::stoi(selected_floorbot_str);
             } catch (std::invalid_argument& error) {
-                std::cout << "Error: the please enter a number." << std::endl << std::endl;
+                std::cerr << "Error: the please enter a number." << std::endl << std::endl;
                 return 1;
             }
             if (selected_floorbot_number < 1 || selected_floorbot_number > num_floorbots) {
-                std::cout << "Error: incorrect number selected, please enter a number between 1-" << num_floorbots << "." << std::endl;
+                std::cerr << "Error: incorrect number selected, please enter a number between 1-" << num_floorbots << "." << std::endl;
             } else {
                 current_floorbot = current_user->linked_floorbots[selected_floorbot_number-1];
                 floorbot_selected = true;
@@ -193,7 +204,7 @@ private:
 
 public:
     int run() {
-        std::cout << std::endl << "Welcome to the Floorbot Commander CLI!" << std::endl;
+        welcome();
         login();
         select_robot();
         std::cout << std::endl << "Please enter a command, type '--help' to see a list of available commands, or 'EXIT' to exit the CLI:" << std::endl;

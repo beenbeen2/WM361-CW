@@ -58,7 +58,7 @@ private:
 public:
     int parse_command(std::string flag_input, std::string arg_input) {
         if (!flag_map.count(flag_input)) {
-            std::cout << "Error: invalid flag entered." << std::endl << std::endl;
+            std::cerr << "Error: invalid flag entered." << std::endl << std::endl;
             return 1;
         }
         Flag flag = flag_map[flag_input];
@@ -113,11 +113,11 @@ public:
     
     int install(std::string script_name) {
         if (!get_available_scripts_map().count(script_name)) {
-            std::cout << "Error: script could not be located, is the script name correct?" << std::endl << std::endl;
+            std::cerr << "Error: script could not be located, is the script name correct?" << std::endl << std::endl;
             return 1;
         }
         if (get_installed_scripts_map().count(script_name)) {
-            std::cout << "Error: script is already installed!" << std::endl << std::endl;
+            std::cerr << "Error: script is already installed!" << std::endl << std::endl;
             return 1;
         }
         std::cout << "Installing " << script_name << "..." << std::endl;
@@ -129,7 +129,7 @@ public:
 
     int uninstall(std::string script_name) {
         if (!get_installed_scripts_map().count(script_name)) {
-            std::cout << "Error: script is not installed!" << std::endl << std::endl;
+            std::cerr << "Error: script is not installed!" << std::endl << std::endl;
             return 1;
         }
         std::cout << "Uninstalling " << script_name << "..."  << std::endl;
@@ -140,7 +140,7 @@ public:
             script_to_uninstall
         );
         if (script_position == installed_scripts.end()) { 
-            std::cout << "Error: script could not be located." << std::endl << std::endl;
+            std::cerr << "Error: script could not be located." << std::endl << std::endl;
             return 1;
         }
         installed_scripts.erase(script_position); 
@@ -151,7 +151,7 @@ public:
     int run(std::string script_name) {
         std::cout << "Searching for " << script_name << "..."  << std::endl;
         if (!get_installed_scripts_map().count(script_name)) {
-            std::cout << "Error: script is not installed, is it spelt correctly?" << std::endl << std::endl;
+            std::cerr << "Error: script is not installed, is it spelt correctly?" << std::endl << std::endl;
             return 1;
         }
         std::vector<std::string> command_set;
@@ -164,7 +164,7 @@ public:
             }
         }
         if (!script_found) {
-            std::cout << "Error: no script exists with the name '"
+            std::cerr << "Error: no script exists with the name '"
             << script_name << "', is" << std::endl  << std::endl;
             return 1;
         }

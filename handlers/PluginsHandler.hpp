@@ -75,7 +75,7 @@ private:
 public:
     int parse_command(std::string flag_input, std::string arg_input = "") {
         if (!flag_map.count(flag_input)) {
-            std::cout << "Error: invalid flag entered."  << std::endl << std::endl;
+            std::cerr << "Error: invalid flag entered."  << std::endl << std::endl;
             return 1;
         }
         Flag flag = flag_map[flag_input];
@@ -142,11 +142,11 @@ public:
 
     int install(std::string plugin_name) {
         if (!get_available_plugins_map().count(plugin_name)) {
-            std::cout << "Error: plugin could not be located, is the plugin name correct?" << std::endl << std::endl;
+            std::cerr << "Error: plugin could not be located, is the plugin name correct?" << std::endl << std::endl;
             return 1;
         }
         if (get_installed_plugins_map().count(plugin_name)) {
-            std::cout << "Error: plugin is already installed!" << std::endl << std::endl;
+            std::cerr << "Error: plugin is already installed!" << std::endl << std::endl;
             return 1;
         }
         std::cout << "Installing and enabling " << plugin_name << "..." << std::endl;
@@ -158,7 +158,7 @@ public:
 
     int uninstall(std::string plugin_name) {
         if (!get_installed_plugins_map().count(plugin_name)) {
-            std::cout << "Error: plugin is not installed!" << std::endl << std::endl;
+            std::cerr << "Error: plugin is not installed!" << std::endl << std::endl;
             return 1;
         }
         std::cout << "Uninstalling " << plugin_name << "..."  << std::endl;
@@ -171,7 +171,7 @@ public:
         if (plugin_position != current_floorbot->installed_plugins.end()) { 
             current_floorbot->installed_plugins.erase(plugin_position); 
         } else {
-            std::cout << "Error: plugin could not be located." << std::endl << std::endl;
+            std::cerr << "Error: plugin could not be located." << std::endl << std::endl;
         }
         std::cout << plugin_name << " uninstalled and disabled."  << std::endl << std::endl;
         return 0;
@@ -179,11 +179,11 @@ public:
 
     int enable(std::string plugin_name) {
         if (!get_installed_plugins_map().count(plugin_name)) {
-            std::cout << "Error: plugin is not installed!" << std::endl;
+            std::cerr << "Error: plugin is not installed!" << std::endl;
             return 1;
         }
         if (get_enabled_plugins_map().count(plugin_name)) {
-            std::cout << "Error: plugin is already enabled!" << std::endl;
+            std::cerr << "Error: plugin is already enabled!" << std::endl;
             return 1;
         }
         std::cout << "Enabling " << plugin_name << "..."  << std::endl;
@@ -195,11 +195,11 @@ public:
 
     int disable(std::string plugin_name) {
         if (!get_installed_plugins_map().count(plugin_name)) {
-            std::cout << "Error: plugin is not installed!" << std::endl << std::endl;
+            std::cerr << "Error: plugin is not installed!" << std::endl << std::endl;
             return 1;
         }
         if (!get_enabled_plugins_map().count(plugin_name)) {
-            std::cout << "Error: plugin is already disabled!" << std::endl << std::endl;
+            std::cerr << "Error: plugin is already disabled!" << std::endl << std::endl;
             return 1;
         }
         std::cout << "Disabling " << plugin_name << "..."  << std::endl;

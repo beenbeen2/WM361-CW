@@ -23,7 +23,7 @@ private:
 public:
     int parse_command(std::string flag_input, std::string arg_input = "") {
         if (!flag_map.count(flag_input)) {
-            std::cout << "Error: invalid flag entered." << std::endl << std::endl;
+            std::cerr << "Error: invalid flag entered." << std::endl << std::endl;
             return 1;
         }
         Flag flag = flag_map.at(flag_input);
@@ -35,7 +35,7 @@ public:
                 break;
             case Flag::save:
                 if (arg_input.empty()) {
-                    std::cout << "Error: Please provide a filename to save the diagnostic report to." << std::endl << std::endl;
+                    std::cerr << "Error: Please provide a filename to save the diagnostic report to." << std::endl << std::endl;
                     return 1;
                 }
                 save(file_name);
@@ -73,18 +73,18 @@ public:
 
     int save(std::string filename) {
         // if ((filename.length() < file_extension.length()) {
-        //     std::cout << "Error: file name must include a support type extension, such as '.txt'." << std::endl;
+        //     std::cerr << "Error: file name must include a support type extension, such as '.txt'." << std::endl;
         //     return 1;
         // }
         // if (filename.substr(filename.length() - file_extension.length()) == file_extension)) {
-        //     std::cout << "Error: Unsupported file type, filename must end in '.txt'." << std::endl;
+        //     std::cerr << "Error: Unsupported file type, filename must end in '.txt'." << std::endl;
         //     return 1;
         // }
         std::string file_path = "saved_reports\\" + filename + file_extension;
         std::ofstream DiagnosticReport(file_path);
 
         if (!DiagnosticReport.is_open()) {
-            std::cout << "Error: Failed to open file for writing, check the filename entered is valid." << std::endl << std::endl;
+            std::cerr << "Error: Failed to open file for writing, check the filename entered is valid." << std::endl << std::endl;
             return 1;
         }
 

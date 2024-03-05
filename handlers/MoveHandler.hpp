@@ -18,6 +18,7 @@ private:
         {"--forwards", Flag::forward},
         {"--b", Flag::back},
         {"--back", Flag::back},
+        {"--backward", Flag::back},
         {"--backwards", Flag::back},
         {"--r", Flag::right},
         {"--right", Flag::right},
@@ -29,20 +30,20 @@ private:
 public:
     int parse_command(std::string flag_input, std::string arg_input) {
         if (!flag_map.count(flag_input)) {
-            std::cout << "Error: invalid flag entered." << std::endl << std::endl;
+            std::cerr << "Error: invalid flag entered." << std::endl << std::endl;
             return 1;
         }
         int distance;
         Flag flag = flag_map[flag_input];
         if (flag != Flag::help) {
             if (arg_input.empty()) {
-                std::cout << "Error: please enter a distance value." << std::endl << std::endl;
+                std::cerr << "Error: please enter a distance value." << std::endl << std::endl;
                 return 1;
             }
             try {
                 distance = std::stoi(arg_input);
             } catch (std::invalid_argument& error) {
-                std::cout << "Error: the distance must be an integer." << std::endl << std::endl;
+                std::cerr << "Error: the distance must be an integer." << std::endl << std::endl;
                 return 1;
             }
         }

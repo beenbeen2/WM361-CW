@@ -23,7 +23,7 @@ public:
 
     int parse_command(std::string flag_input, std::string arg_input = "") {
         if (!flag_map.count(flag_input)) {
-            std::cout << "Error: invalid flag entered." << std::endl << std::endl;
+            std::cerr << "Error: invalid flag entered." << std::endl << std::endl;
             return 1;
         }
         Flag flag = flag_map[flag_input];
@@ -57,7 +57,7 @@ public:
 
     int power_off() {
         if (!current_floorbot->get_powered_on()) {
-            std::cout << "Error: " << current_floorbot->get_name() << " is already off!" << std::endl << std::endl;
+            std::cerr << "Error: " << current_floorbot->get_name() << " is already off!" << std::endl << std::endl;
             return 1;
         }
         std::cout << "Turning " << current_floorbot->get_name() << " off..." << std::endl;
@@ -69,7 +69,7 @@ public:
 
     int power_on() {
         if (current_floorbot->get_powered_on()) {
-            std::cout << "Error: " << current_floorbot->get_name() << " is already on!" << std::endl << std::endl;
+            std::cerr << "Error: " << current_floorbot->get_name() << " is already on!" << std::endl << std::endl;
             return 1;
         }
         std::cout << "Turning " << current_floorbot->get_name() << " on..." << std::endl;
