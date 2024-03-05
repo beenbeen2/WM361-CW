@@ -9,14 +9,16 @@ class MoveHandler: virtual private CLICache {
 private:
     Database database;
     Utils utils;
+    Help help;
 
-public:
     enum class Flag { forward, back, right, left, help };
     std::unordered_map<std::string, Flag> flag_map = {
         {"--f", Flag::forward},
         {"--forward", Flag::forward},
+        {"--forwards", Flag::forward},
         {"--b", Flag::back},
         {"--back", Flag::back},
+        {"--backwards", Flag::back},
         {"--r", Flag::right},
         {"--right", Flag::right},
         {"--l", Flag::left},
@@ -24,6 +26,7 @@ public:
         {"--help", Flag::help},
     };
 
+public:
     int parse_command(std::string flag_input, std::string arg_input) {
         int distance;
         Flag flag = flag_map[flag_input];
@@ -32,12 +35,10 @@ public:
                 std::cout << "Error: invalid direction flag entered." << std::endl << std::endl;
                 return 1;
             }
-
             if (arg_input.empty()) {
                 std::cout << "Error: please enter a distance value." << std::endl << std::endl;
                 return 1;
             }
-
             try {
                 distance = std::stoi(arg_input);
             } catch (std::invalid_argument& error) {
@@ -60,23 +61,13 @@ public:
                 current_floorbot->move_right(distance);
                 break;
             case Flag::help:
-                help();
+                help.move();
                 break;
         }
 
         std::cout << "Floorbot has moved " << distance << "cm to (" 
             << current_floorbot->get_x_coord() << ", " << current_floorbot->get_y_coord() << ")." << std::endl << std::endl;
         return 0;
-    }
-
-    void help() {
-        std::cout << std::endl << "Available commands:" << std::endl;
-        std::cout << "move " << std::endl;
-        std::cout << "    --f/--forward <distance>" << std::endl
-                  << "    --b/--back <distance>" << std::endl
-                  << "    --r/--right <distance>" << std::endl
-                  << "    --l/--left <distance>" << std::endl
-                  << "    --help (display this message)" << std::endl << std::endl;
     }
 };
 

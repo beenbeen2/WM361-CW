@@ -5,17 +5,18 @@
 #include "../AddOnsDatabase.hpp"
 #include "../Database.hpp"
 #include "../Utils.hpp"
+#include "../Help.hpp"
   
 class ScriptsHandler: virtual private CLICache {
 private:
     AddOnsDatabase add_ons;
     Database database;
     Utils utils;
+    Help help;
 
     std::unordered_map<std::string, std::shared_ptr<Script>> installed_scripts_map;
     std::unordered_map<std::string, std::shared_ptr<Script>> available_scripts_map;
 
-public: 
     enum class Flag { list, install, uninstall, run, help };
     std::unordered_map<std::string, Flag> flag_map = {
         {"--list", Flag::list},
@@ -54,6 +55,7 @@ public:
         return installed_scripts_map;
     }
 
+public:
     int parse_command(std::string flag_input, std::string arg_input) {
         if (!flag_map.count(flag_input)) {
             std::cout << "Error: invalid flag entered." << std::endl << std::endl;
@@ -76,7 +78,7 @@ public:
                 run(scriptname);
                 break;
             case Flag::help:
-                help();
+                help.scripts();
                 break;
         }
         return 0;
@@ -174,16 +176,6 @@ public:
         std::cout << std::endl;
         std::cout << script_name << " finished."  << std::endl << std::endl;
         return 0;
-    }
-
-    void help() {
-        std::cout << std::endl << "Available commands:" << std::endl;
-        std::cout << "scripts"  << std::endl
-                  << "    --list" << std::endl
-                  << "    --install <script-name>" << std::endl
-                  << "    --uninstall <script-name>" << std::endl
-                  << "    --run <script-name>" << std::endl
-                  << "    --help (display this message)" << std::endl << std::endl;
     }
 };
 

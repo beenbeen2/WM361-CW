@@ -11,12 +11,12 @@ private:
     AddOnsDatabase add_ons;
     Database database;
     Utils utils;
+    Help help;
 
     std::unordered_map<std::string, std::shared_ptr<Plugin>> available_plugins_map;
     std::unordered_map<std::string, std::shared_ptr<Plugin>> installed_plugins_map;
     std::unordered_map<std::string, std::shared_ptr<Plugin>> enabled_plugins_map;
 
-public:
     enum class Flag { list, install, uninstall, enable, disable, help };
     std::unordered_map<std::string, Flag> flag_map = {
         {"--list", Flag::list},
@@ -72,6 +72,7 @@ public:
         return enabled_plugins_map;
     }
 
+public:
     int parse_command(std::string flag_input, std::string arg_input = "") {
         if (!flag_map.count(flag_input)) {
             std::cout << "Error: invalid flag entered."  << std::endl << std::endl;
@@ -97,7 +98,7 @@ public:
                 disable(plugin_name);
                 break;
             case Flag::help:
-                help();
+                help.plugins();
                 break;
         }
         return 0;
@@ -206,17 +207,6 @@ public:
         plugin_to_disable.enabled = false;
         std::cout << plugin_name << "enabled."  << std::endl << std::endl;
         return 0;
-    }
-
-    void help() {
-        std::cout << std::endl << "Available commands:" << std::endl;
-        std::cout << "plugins" << std::endl
-                  << "    --list" << std::endl
-                  << "    --install <plugin-name>" << std::endl
-                  << "    --uninstall <plugin-name>" << std::endl
-                  << "    --enable <plugin-name>" << std::endl
-                  << "    --disable <plugin-name>" << std::endl
-                  << "    --help (display this message)" << std::endl << std::endl;
     }
 };
 

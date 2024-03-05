@@ -9,6 +9,7 @@ class ControlHandler: virtual private CLICache {
 private:
     Database database;
     Utils utils;
+    Help help;
 
 public:
     enum class Flag { restart, power_off, power_on, factory_reset, help };
@@ -41,7 +42,7 @@ public:
                 factory_reset();
                 break;
             case Flag::help:
-                help();
+                help.control();
                 break;
         }
         return 0;
@@ -55,7 +56,7 @@ public:
     };
 
     int power_off() {
-        if (!current_floorbot->powered_on) {
+        if (!current_floorbot->get_powered_on()) {
             std::cout << "Error: " << current_floorbot->get_name() << " is already off!" << std::endl << std::endl;
             return 1;
         }
@@ -67,7 +68,7 @@ public:
     };
 
     int power_on() {
-        if (current_floorbot->powered_on) {
+        if (current_floorbot->get_powered_on()) {
             std::cout << "Error: " << current_floorbot->get_name() << " is already on!" << std::endl << std::endl;
             return 1;
         }
@@ -91,16 +92,6 @@ public:
         };
         return 0;
     };
-
-    void help() {
-        std::cout << std::endl << "Available commands:" << std::endl;
-        std::cout << "control" << std::endl
-                  << "    --restart" << std::endl
-                  << "    --power_off" << std::endl
-                  << "    --power_on" << std::endl
-                  << "    --factory_reset" << std::endl
-                  << "    --help (display this message)" << std::endl << std::endl;
-    }
 };
 
 #endif

@@ -9,6 +9,8 @@ class DiagnosticsHandler: virtual private CLICache {
 private:
     Database database;
     Utils utils;
+    Help help;
+
     const std::string file_extension = ".txt";
     enum class Flag { print, save, submit, help };
     const std::unordered_map<std::string, const Flag> flag_map = {
@@ -42,7 +44,7 @@ public:
                 submit();
                 break;
             case Flag::help:
-                help();
+                help.diagnostics();
                 break;
         }
         return 0;
@@ -114,15 +116,6 @@ public:
             << "The diagnostic report for " << current_floorbot->get_name() 
             << " has successfully been submitted to Floorbot customer support." << std::endl << std::endl;
         return 0;
-    }
-
-    void help() {
-        std::cout << std::endl << "Available commands:" << std::endl;
-        std::cout << "diagnostics" << std::endl
-                  << "    --print" << std::endl
-                  << "    --save <filename>" << std::endl
-                  << "    --submit" << std::endl
-                  << "    --help (display this message)" << std::endl << std::endl;
     }
 };
 

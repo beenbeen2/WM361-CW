@@ -11,6 +11,7 @@
 #include "CLICache.cpp"
 #include "Database.hpp"
 #include "Utils.hpp"
+#include "Help.hpp"
 
 #include "handlers/MoveHandler.hpp"
 #include "handlers/DiagnosticsHandler.hpp"
@@ -22,13 +23,13 @@ class CLI: virtual public CLICache {
 private:
     Database database;
     Utils utils;
+    Help help;
     MoveHandler move;
     DiagnosticsHandler diagnostics;
     ScriptsHandler scripts;
     PluginsHandler plugins;
     ControlHandler control;
 
-public:
     enum class Command { move, diagnostics, plugins, scripts, control, help, exit };
     std::unordered_map<std::string, Command> command_map = {
         {"move", Command::move},
@@ -39,7 +40,6 @@ public:
         {"--help", Command::help},
         {"EXIT", Command::exit},
     };
-
     std::unordered_map<std::string, std::string> login_service_map = {
         {"1", "Google"},
         {"2", "Apple"},
@@ -50,6 +50,70 @@ public:
         {"2", std::make_shared<Account>(database.admin_account)},
     };
 
+    int parse_command(std::string input) {
+        std::string command_input;
+        std::string flag_input;
+        std::string arg_input;
+
+        if (input.empty()) {
+            std::cout << "Error: please enter a command" << std::endl << std::endl;
+        };
+
+        std::vector<std::string> input_list = utils.split_command(input);
+        if (input_list.size() > 0) { command_input = input_list[0]; };
+        if (input_list.size() > 1) { flag_input = input_list[1]; };
+        if (input_list.size() > 2) { arg_input = input_list[2]; };
+        if (input_list.size() >= 4) {
+            std::cout << "Error: too many parameters enter, at most a command, flag, and argument should be entered" << std::endl << std::endl;
+            return 1;
+        };
+        if (!command_map.count(command_input)) {
+            std::cout << "Error: invalid command entered." << std::endl << std::endl;
+            return 1;
+        }
+        Command command = command_map[command_input];
+
+        std::cout << std::endl;
+        switch(command) {
+            case Command::move: 
+                move.parse_command(flag_input, arg_input);
+                break;
+            case Command::diagnostics:
+                diagnostics.parse_command(flag_input, arg_input);
+                break;
+            case Command::plugins:
+                plugins.parse_command(flag_input, arg_input);
+                break;
+            case Command::scripts:
+                if (!current_user->is_admin) {
+                    std::cout << "Warning: Scripts may damage your floorbot and are restricted to admin users only." 
+                    << std::endl << std::endl;
+                    return 0;
+                }
+                scripts.parse_command(flag_input, arg_input);
+                break;
+            case Command::control:
+                control.parse_command(flag_input, arg_input);
+                break;
+            case Command::help:
+                help.general();
+                help.move();
+                help.diagnostics();
+                help.plugins();
+                if (current_user->is_admin) {
+                    help.scripts();
+                }
+                help.control();
+                break;
+            case Command::exit:
+                std::cout << "Exiting Floorbot CLI." << std::endl << std::endl;
+                exit(0);
+        };
+
+        return 0;
+    };
+
+public:
     int login() {
         bool login_service_selected = false;
         std::string login_service;
@@ -103,7 +167,7 @@ public:
             }
             std::cin >> selected_floorbot_number;
             if (selected_floorbot_number < 1 || selected_floorbot_number > current_user->linked_floorbots.size()) {
-                std::cout << "Error: incorrect number selected, please enter a number between 1-3.\n\n";
+                std::cout << "Error: incorrect number selected, please enter a number between 1-3." << std::endl;
             } else {
                 current_floorbot = current_user->linked_floorbots[selected_floorbot_number-1];
                 floorbot_selected = true;
@@ -113,100 +177,21 @@ public:
         return 0;
     };
 
-    int parse_command(std::string input) {
-        std::string command_input;
-        std::string flag_input;
-        std::string arg_input;
-
-        if (input.empty()) {
-            std::cout << "Error: please enter a command" << std::endl << std::endl;
-        };
-
-        std::vector<std::string> input_list = utils.split_command(input);
-        if (input_list.size() > 0) { command_input = input_list[0]; };
-        if (input_list.size() > 1) { flag_input = input_list[1]; };
-        if (input_list.size() > 2) { arg_input = input_list[2]; };
-        if (input_list.size() >= 4) {
-            std::cout << "Error: too many parameters enter, at most a command, flag, and argument should be entered" << std::endl << std::endl;
-            return 1;
-        };
-        if (!command_map.count(command_input)) {
-            std::cout << "Error: invalid command entered." << std::endl << std::endl;
-            return 1;
-        }
-        Command command = command_map[command_input];
-
-        std::cout << std::endl;
-        switch(command) {
-            case Command::move: 
-                move.parse_command(flag_input, arg_input);
-                break;
-            case Command::diagnostics:
-                diagnostics.parse_command(flag_input, arg_input);
-                break;
-            case Command::plugins:
-                plugins.parse_command(flag_input, arg_input);
-                break;
-            case Command::scripts:
-                if (!current_user->is_admin) {
-                    std::cout << "Warning: Scripts may damage your floorbot and are restricted to admin users only." 
-                    << std::endl << std::endl;
-                    return 0;
-                }
-                scripts.parse_command(flag_input, arg_input);
-                break;
-            case Command::control:
-                control.parse_command(flag_input, arg_input);
-                break;
-            case Command::help:
-                help();
-                break;
-            case Command::exit:
-                std::cout << "Exiting Floorbot CLI." << std::endl << std::endl;
-                exit(0);
-        };
-
-        return 0;
-    };
-
     int enter_command() {
         std::string input = utils.get_input_command();
         parse_command(input);
         return 0;
     };
-
-    void help() {
-        utils.general_help();
-        utils.move_help();
-        utils.diagnostics_help();
-        utils.plugins_help();
-        if (current_user->is_admin) {
-            utils.scripts_help();
-        }
-        utils.control_help();
-    }
 };
 
 int main() {  
     CLI cli;
     
     std::cout << std::endl << "Welcome to the Floorbot Commander CLI!" << std::endl;
-
     cli.login();
-    if (!cli.user_logged_in) {
-        std::cout << "Error: CLI has not logged in correctly, please try restarting the CLI." << std::endl << std::endl;
-        return 1;
-    }
     cli.select_robot();
-    if (!cli.floorbot_selected) {
-        std::cout << "Error: CLI has not selected a floorbot correctly," 
-            << "please try restarting the CLI and/or selecting a different robot" << std::endl << std::endl;
-        return 1;
-    }
-
-    std::cout << std::endl << "Please enter a command, "
-        << "type '--help' to see a list of available commands, "
-        << "or 'EXIT' to exit the CLI:" << std::endl;
+    std::cout << std::endl << "Please enter a command, type '--help' to see a list of available commands, or 'EXIT' to exit the CLI:" << std::endl;
     while(true) { cli.enter_command(); }
+
     return 0;
 }
