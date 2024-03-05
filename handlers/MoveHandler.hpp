@@ -1,9 +1,9 @@
 #ifndef MOVEHANDLER
 #define MOVEHANDLER
 
-#include "../CLICache.hpp"
-#include "../Database.hpp"
-#include "../Utils.hpp"
+#include "../services/CLICache.hpp"
+#include "../services/Database.hpp"
+#include "../services/Utils.hpp"
 
 class MoveHandler: virtual private CLICache {
 private:
@@ -28,13 +28,13 @@ private:
 
 public:
     int parse_command(std::string flag_input, std::string arg_input) {
+        if (!flag_map.count(flag_input)) {
+            std::cout << "Error: invalid flag entered." << std::endl << std::endl;
+            return 1;
+        }
         int distance;
         Flag flag = flag_map[flag_input];
         if (flag != Flag::help) {
-            if (!flag_map.count(flag_input)) {
-                std::cout << "Error: invalid direction flag entered." << std::endl << std::endl;
-                return 1;
-            }
             if (arg_input.empty()) {
                 std::cout << "Error: please enter a distance value." << std::endl << std::endl;
                 return 1;

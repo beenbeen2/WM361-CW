@@ -1,9 +1,9 @@
 #ifndef DIAGNOSTICSHANDLER
 #define DIAGNOSTICSHANDLER
 
-#include "../CLICache.hpp"
-#include "../Database.hpp"
-#include "../Utils.hpp"
+#include "../services/CLICache.hpp"
+#include "../services/Database.hpp"
+#include "../services/Utils.hpp"
 
 class DiagnosticsHandler: virtual private CLICache {
 private:

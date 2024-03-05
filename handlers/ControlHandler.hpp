@@ -1,9 +1,9 @@
 #ifndef CONTROLHANDLER
 #define CONTROLHANDLER
 
-#include "../CLICache.hpp"
-#include "../Database.hpp"
-#include "../Utils.hpp"
+#include "../services/CLICache.hpp"
+#include "../services/Database.hpp"
+#include "../services/Utils.hpp"
 
 class ControlHandler: virtual private CLICache {
 private:

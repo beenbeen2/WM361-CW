@@ -8,10 +8,10 @@
 #include "./components/Floorbot.hpp"
 #include "./components/Account.hpp"
 
-#include "CLICache.cpp"
-#include "Database.hpp"
-#include "Utils.hpp"
-#include "Help.hpp"
+#include "services/CLICache.cpp"
+#include "services/Database.hpp"
+#include "services/Utils.hpp"
+#include "services/Help.hpp"
 
 #include "handlers/MoveHandler.hpp"
 #include "handlers/DiagnosticsHandler.hpp"
@@ -113,7 +113,6 @@ private:
         return 0;
     };
 
-public:
     int login() {
         bool login_service_selected = false;
         std::string login_service;
@@ -157,6 +156,8 @@ public:
     };
 
     int select_robot() {
+        int num_floorbots = 0;
+        std::string selected_floorbot_str;
         int selected_floorbot_number;
         while (!floorbot_selected) {
             std::cout << std::endl << "Please select a floorbot linked to your account to begin controlling:" << std::endl;
@@ -165,9 +166,16 @@ public:
                 std::cout << "[" << std::to_string(i) << "] " << linked_floorbot->get_name() << std::endl;
                 i++;
             }
-            std::cin >> selected_floorbot_number;
-            if (selected_floorbot_number < 1 || selected_floorbot_number > current_user->linked_floorbots.size()) {
-                std::cout << "Error: incorrect number selected, please enter a number between 1-3." << std::endl;
+            std::cin >> selected_floorbot_str;
+            num_floorbots = current_user->linked_floorbots.size();
+            try {
+                selected_floorbot_number = std::stoi(selected_floorbot_str);
+            } catch (std::invalid_argument& error) {
+                std::cout << "Error: the please enter a number." << std::endl << std::endl;
+                return 1;
+            }
+            if (selected_floorbot_number < 1 || selected_floorbot_number > num_floorbots) {
+                std::cout << "Error: incorrect number selected, please enter a number between 1-" << num_floorbots << "." << std::endl;
             } else {
                 current_floorbot = current_user->linked_floorbots[selected_floorbot_number-1];
                 floorbot_selected = true;
@@ -182,16 +190,20 @@ public:
         parse_command(input);
         return 0;
     };
+
+public:
+    int run() {
+        std::cout << std::endl << "Welcome to the Floorbot Commander CLI!" << std::endl;
+        login();
+        select_robot();
+        std::cout << std::endl << "Please enter a command, type '--help' to see a list of available commands, or 'EXIT' to exit the CLI:" << std::endl;
+        while(true) { enter_command(); }
+        return 0;
+    }
 };
 
 int main() {  
     CLI cli;
-    
-    std::cout << std::endl << "Welcome to the Floorbot Commander CLI!" << std::endl;
-    cli.login();
-    cli.select_robot();
-    std::cout << std::endl << "Please enter a command, type '--help' to see a list of available commands, or 'EXIT' to exit the CLI:" << std::endl;
-    while(true) { cli.enter_command(); }
-
+    cli.run();
     return 0;
 }

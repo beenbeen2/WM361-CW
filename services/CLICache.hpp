@@ -3,10 +3,10 @@
 
 #include <memory>
 
-#include "./components/Script.hpp"
-#include "./components/Plugin.hpp"
-#include "./components/Floorbot.hpp"
-#include "./components/Account.hpp"
+#include "../components/Script.hpp"
+#include "../components/Plugin.hpp"
+#include "../components/Floorbot.hpp"
+#include "../components/Account.hpp"
 
 // In reality, scripts would be installed via the ScriptHandler and copied to the CLI Cache/local storage.
 // However, for demonstration purposes they are simply composed directly from the Database class.

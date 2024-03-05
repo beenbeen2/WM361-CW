@@ -11,8 +11,8 @@
 #include <algorithm>
 #include <memory>
 
-#include "./components/Script.hpp"
-#include "./components/Plugin.hpp"
+#include "../components/Script.hpp"
+#include "../components/Plugin.hpp"
 
 class AddOnsDatabase {
     // Dummy plugins and scripts for demonstration purposes.

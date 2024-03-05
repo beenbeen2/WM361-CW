@@ -11,9 +11,9 @@
 #include <algorithm>
 #include <memory>
 
+#include "../components/Floorbot.hpp"
+#include "../components/Account.hpp"
 #include "AddOnsDatabase.hpp"
-#include "./components/Floorbot.hpp"
-#include "./components/Account.hpp"
 
 class Database {
     // Dummy floorbots and accounts for demonstration purposes.

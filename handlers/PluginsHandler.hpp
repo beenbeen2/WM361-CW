@@ -1,10 +1,10 @@
 #ifndef PLUGINSHANDLER
 #define PLUGINSHANDLER
 
-#include "../CLICache.hpp"
-#include "../Database.hpp"
-#include "../AddOnsDatabase.hpp"
-#include "../Utils.hpp"
+#include "../services/CLICache.hpp"
+#include "../services/Database.hpp"
+#include "../services/AddOnsDatabase.hpp"
+#include "../services/Utils.hpp"
 
 class PluginsHandler: virtual private CLICache {
 private:

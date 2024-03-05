@@ -1,11 +1,11 @@
 #ifndef SCRIPTSHANDLER
 #define SCRIPTSHANDLER
 
-#include "../CLICache.hpp"
-#include "../AddOnsDatabase.hpp"
-#include "../Database.hpp"
-#include "../Utils.hpp"
-#include "../Help.hpp"
+#include "../services/CLICache.hpp"
+#include "../services/AddOnsDatabase.hpp"
+#include "../services/Database.hpp"
+#include "../services/Utils.hpp"
+#include "../services/Help.hpp"
   
 class ScriptsHandler: virtual private CLICache {
 private:
